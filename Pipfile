@@ -12,6 +12,7 @@ v = {editable = true,version = "*"}
 pandas = "*"
 dash = "*"
 dash-bootstrap-components = "*"
+tqdm = "*"
 
 [requires]
 python_version = "3.8"
