@@ -76,7 +76,7 @@ def _prepare_callbacks(app, generator, dest_folder):
         [Input("dest-folder", "value")],
     )
     def change_dest_folder(new_dest_folder):
-        generator.set_dest_folder(Path(dest_folder).parent.joinpath(new_dest_folder))
+        generator.dest_folder = Path(dest_folder).parent.joinpath(new_dest_folder)
         return ""
 
     @app.callback(
@@ -84,7 +84,7 @@ def _prepare_callbacks(app, generator, dest_folder):
         [Input('num-days', 'value')])
     def update_output(value):
         generator.clean()
-        generator.set_num_days(value)
+        generator.num_days = value
         return f"Num. Days: {value}"
 
     @app.callback(

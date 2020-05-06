@@ -70,12 +70,25 @@ class Generator(object):
     @property
     def days(self):
         return self._days
+    
+    @property
+    def num_days(self, value: int):
+        return self._num_days
 
-    def set_num_days(self, value: int):
+    @num_days.setter
+    def num_days(self, value: int):
         self._num_days = value
-
-    def set_dest_folder(self, dest_folder: 'PurePath' = Path("./dataset")):
-        self._dest_folder = dest_folder
+    
+    @property
+    def dest_folder(self, value: int):
+        return self._dest_folder
+    
+    @dest_folder.setter
+    def dest_folder(self, dest_folder: 'PurePath' = Path("./dataset")):
+        if isinstance(dest_folder, Path):
+            self._dest_folder = dest_folder
+        else:
+            raise Exception("ERROR: destination folder is not a PurePath object...")
 
     def clean(self):
         del self._days[:]
