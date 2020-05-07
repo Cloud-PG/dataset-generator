@@ -60,6 +60,7 @@ class Generator(object):
     def __init__(self,
                  config: dict = {},
                  num_days: int = 1,
+                 num_req_x_day: int = 1000,
                  start_date: 'datetime.date' = datetime.date(2020, 1, 1),
                  dest_folder: 'PurePath' = Path("."),
                  ):
@@ -70,6 +71,7 @@ class Generator(object):
             setattr(self, f"_{key}", val)
 
         self._num_days = num_days
+        self._num_req_x_day = num_req_x_day
         self._dest_folder = dest_folder
 
     @property
@@ -77,11 +79,23 @@ class Generator(object):
         return self._days
 
     @property
+    def num_req_x_day(self):
+        return self._num_req_x_day
+
+    @num_req_x_day.setter
+    def num_req_x_day(self, value: int):
+        assert isinstance(
+            value, int), "ERROR: num req x day needs an integer value"
+        self._num_req_x_day = value
+
+    @property
     def num_days(self):
         return self._num_days
 
     @num_days.setter
     def num_days(self, value: int):
+        assert isinstance(
+            value, int), "ERROR: num days needs an integer value"
         self._num_days = value
 
     @property
