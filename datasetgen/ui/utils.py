@@ -1,6 +1,7 @@
 import importlib
 
 from .. import functions
+from inspect import getmodule
 
 
 def get_functions():
@@ -8,10 +9,6 @@ def get_functions():
     return [
         {'label': elm, 'value': elm}
         for elm in dir(functions)
-        if callable(getattr(functions, elm))
+        if callable(getattr(functions, elm)) and \
+            getmodule(getattr(functions, elm)).__name__ == 'datasetgen.functions'
     ]
-
-
-def call_function(name: str, *args, **kwargs):
-    fun = getattr(functions, name)
-    return fun(*args, **kwargs)

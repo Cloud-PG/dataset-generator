@@ -5,8 +5,8 @@ import dash
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output
-
+from dash.dependencies import Input, Output, State
+import plotly.express as px
 from ..generator import Generator
 from . import functions
 from .utils import get_functions
@@ -18,25 +18,11 @@ _PROGRESS = 100
 def _create_layout(app, dest_folder: 'Path', function_UIs: dict):
 
     app.layout = html.Div(children=[
-        dcc.Interval(id='progress-interval', n_intervals=0, interval=1000),
+        dcc.Interval(id='progress-interval', n_intervals=0, interval=750),
         # For empty output callbacks
         html.Div(id='hidden-div', style={'display': "none"}),
 
         html.H2(children='Dataset Generator'),
-        dbc.Alert(
-            "",
-            id="dataset-prepare-info-alert",
-            color="info",
-            is_open=False,
-            duration=2000,
-        ),
-        dbc.Alert(
-            "",
-            id="dataset-generator-info-alert",
-            color="info",
-            is_open=False,
-            duration=2000,
-        ),
         html.Hr(),
         dbc.Row([
             dbc.Col(
@@ -101,10 +87,10 @@ def _create_layout(app, dest_folder: 'Path', function_UIs: dict):
             dbc.Col(
                 dbc.Spinner(
                     dcc.Dropdown(
-                    id='functions',
-                    options=get_functions(),
-                    value='None'
-                )),
+                        id='functions',
+                        options=get_functions(),
+                        value='None'
+                    )),
                 width={'size': 7, 'offset': 1}
             ),
             dbc.Col(
@@ -118,16 +104,31 @@ def _create_layout(app, dest_folder: 'Path', function_UIs: dict):
         html.Hr(),
         dbc.Button("Prepare", id='prepare-dataset',
                    color="warning", block=True),
-        dbc.Button("Create", id='create-dataset', color="success", block=True),
+        dbc.Alert(
+            "",
+            id="dataset-prepare-info-alert",
+            color="info",
+            is_open=False,
+            duration=2000,
+        ),
+        dbc.Button("Inpsect", id='inspect-dataset',
+                   color="info", block=True),
+        dbc.Button("Save", id='save-dataset',
+                   color="success", block=True),
+        dbc.Alert(
+            "",
+            id="dataset-generator-info-alert",
+            color="info",
+            is_open=False,
+            duration=2000,
+        ),
         html.Hr(),
         dbc.Progress(
             id='create-dataset-progress', value=_PROGRESS,
-            style={
-                'height': "6px",
-                # 'display': "none",
-            },
             className="mb-3"
         ),
+        html.Hr(),
+        dbc.Spinner(html.Div(id='inspect-output')),
     ])
     return app
 
@@ -181,24 +182,47 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
     @app.callback(
         [Output('dataset-prepare-info-alert', 'is_open'),
          Output('dataset-prepare-info-alert', 'children')],
-        [Input('prepare-dataset', 'n_clicks')]
+        [Input('prepare-dataset', 'n_clicks')],
+        [State("functions", "value")]
     )
-    def prepare_dataset(n_clicks):
+    def prepare_dataset(n_clicks, selected_function):
         if n_clicks:
             global _PROGRESS
             _PROGRESS = 0
-            for day in generator.prepare():
-                _PROGRESS = day
-            return True, "Done"
+            try:
+                fun_kwargs = function_UIs[selected_function].to_dict()
+            except KeyError:
+                return True, "Impossible to get function parameters..."
+            if selected_function and fun_kwargs:
+                generator.clean()
+                for day in generator.prepare(
+                    selected_function, fun_kwargs
+                ):
+                    _PROGRESS = day
+                return True, "Done"
+            else:
+                return True, "Nothing to do..."
         else:
             return False, "No message from prepare dataset..."
 
     @app.callback(
+        Output('inspect-output', 'children'),
+        [Input('inspect-dataset', 'n_clicks')]
+    )
+    def inspect_dataset(n_clicks):
+        if n_clicks:
+            return [
+                dcc.Graph(figure=px.histogram(generator.df, x="Filename")),
+                dcc.Graph(figure=px.histogram(generator.df, x="Size")),
+            ]
+        return ""
+
+    @app.callback(
         [Output('dataset-generator-info-alert', 'is_open'),
          Output('dataset-generator-info-alert', 'children')],
-        [Input('create-dataset', 'n_clicks')]
+        [Input('save-dataset', 'n_clicks')]
     )
-    def create_dataset(n_clicks):
+    def save_dataset(n_clicks):
         if n_clicks:
             global _PROGRESS
             _PROGRESS = 0
@@ -206,7 +230,7 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
                 _PROGRESS = day
             return True, "Done"
         else:
-            return False, "No message from create dataset..."
+            return False, "No message from save dataset..."
 
     @app.callback(
         Output("create-dataset-progress", "value"),

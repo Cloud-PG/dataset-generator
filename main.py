@@ -40,7 +40,7 @@ def main():
         )
         for _ in tqdm(generator.prepare(),
                       desc="Prepare dataset", 
-                      total=generator.num_days, 
+                      total=generator.tot_num_requests, 
                       ascii=True):
             pass
         for _ in tqdm(generator.save(),
