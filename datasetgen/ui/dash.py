@@ -99,6 +99,7 @@ def _create_layout(app, dest_folder: 'Path', function_UIs: dict):
                            ),
             ),
         ]),
+        html.Hr(),
         html.H4(children="Function Parameters"),
         html.Div(id='function-parameters'),
         html.Hr(),
@@ -129,7 +130,7 @@ def _create_layout(app, dest_folder: 'Path', function_UIs: dict):
         ),
         html.Hr(),
         dbc.Spinner(html.Div(id='inspect-output')),
-    ])
+    ], style={'padding': "1em"})
     return app
 
 
