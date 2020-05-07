@@ -1,18 +1,22 @@
 
+from pathlib import Path
+
 import dash
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 
-from pathlib import Path
 from ..generator import Generator
+from . import functions
+from .utils import get_functions
 
 _EXTERNAL_STYLESHEETS = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 _PROGRESS = 100
 
 
-def _create_layout(app, dest_folder: 'Path'):
+def _create_layout(app, dest_folder: 'Path', function_UIs: list):
+
     app.layout = html.Div(children=[
         dcc.Interval(id='progress-interval', n_intervals=0, interval=1000),
         # For empty output callbacks
@@ -53,6 +57,17 @@ def _create_layout(app, dest_folder: 'Path'):
             value=1,
         ),
         html.Hr(),
+        dbc.Button("Reload functions", id='reload-functions', color="primary"),
+        dcc.Dropdown(
+            id='functions',
+            options=[
+                {'label': 'None', 'value': 'None'},
+            ] + get_functions(),
+            value='None'
+        ),
+        html.H4(children="Function Parameters"),
+        html.Div(id='function-parameters'),
+        html.Hr(),
         dbc.Button("Prepare", id='prepare-dataset',
                    color="warning", block=True),
         dbc.Button("Create", id='create-dataset', color="success", block=True),
@@ -69,14 +84,42 @@ def _create_layout(app, dest_folder: 'Path'):
     return app
 
 
-def _prepare_callbacks(app, generator, dest_folder):
+def _prepare_callbacks(app, generator, dest_folder, function_UIs: list):
+
+    for elm in function_UIs:
+        elm.callbacks()
+
+    @app.callback(
+        [Output("functions", "options"), Output("functions", "value")],
+        [Input("reload-functions", "n_clicks")],
+    )
+    def reload_functions(n_clicks):
+        if n_clicks:
+            return [
+                {'label': 'None', 'value': 'None'},
+            ] + get_functions(), "None"
+        return [
+            {'label': 'None', 'value': 'None'},
+        ], "None"
+
+    @app.callback(
+        Output('function-parameters', 'children'),
+        [Input('functions', 'value')],
+    )
+    def update_function_ui(value):
+        for elm in function_UIs:
+            if elm.__class__.__name__ == value:
+                return elm.elements()
+        else:
+            return "Function has no parameters"
 
     @app.callback(
         Output("hidden-div", "children"),
         [Input("dest-folder", "value")],
     )
     def change_dest_folder(new_dest_folder):
-        generator.dest_folder = Path(dest_folder).parent.joinpath(new_dest_folder)
+        generator.dest_folder = Path(
+            dest_folder).parent.joinpath(new_dest_folder)
         return ""
 
     @app.callback(
@@ -128,16 +171,22 @@ def _prepare_callbacks(app, generator, dest_folder):
     return app
 
 
-def start_app(debug: bool = True, dest_folder : 'Path' = Path(__file__).parent):
+def start_app(debug: bool = True, dest_folder: 'Path' = Path(__file__).parent):
     generator = Generator(
         dest_folder=dest_folder,
     )
 
     app = dash.Dash(__name__, external_stylesheets=[
         _EXTERNAL_STYLESHEETS, dbc.themes.BOOTSTRAP
-    ])
+    ], suppress_callback_exceptions=True)
 
-    app = _create_layout(app, dest_folder)
-    app = _prepare_callbacks(app, generator, dest_folder)
+    function_UIs = []
+    for elm in dir(functions):
+        cur_elm = getattr(functions, elm)
+        if type(cur_elm) == type and cur_elm is not functions.FunctionUI and issubclass(cur_elm, functions.FunctionUI):
+            function_UIs.append(cur_elm(app))
+
+    app = _create_layout(app, dest_folder, function_UIs)
+    app = _prepare_callbacks(app, generator, dest_folder, function_UIs)
 
     app.run_server(debug=debug)
