@@ -211,9 +211,10 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
     )
     def inspect_dataset(n_clicks):
         if n_clicks:
+            df = generator.df
             return [
-                dcc.Graph(figure=px.histogram(generator.df, x="Filename")),
-                dcc.Graph(figure=px.histogram(generator.df, x="Size")),
+                dcc.Graph(figure=px.histogram(df, x="Filename")),
+                dcc.Graph(figure=px.histogram(df, x="Size")),
             ]
         return ""
 
