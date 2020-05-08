@@ -103,7 +103,9 @@ class Generator(object):
 
     @property
     def df(self):
-        return pd.concat([day.df for day in self._days])
+        all_df = pd.concat([day.df for day in self._days])
+        all_df['Date'] = pd.to_datetime(all_df.reqDay, unit='s')
+        return all_df
 
     @property
     def days(self):

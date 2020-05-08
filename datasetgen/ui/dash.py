@@ -217,6 +217,7 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
             return [
                 dcc.Graph(figure=px.histogram(df, x="Filename")),
                 dcc.Graph(figure=px.histogram(df, x="Size")),
+                dcc.Graph(figure=px.line(df, y='Size')),
             ]
         return ""
 
