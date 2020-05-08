@@ -1,7 +1,7 @@
 import importlib
 
 from .. import functions
-from inspect import getmodule
+from inspect import isclass
 
 
 def get_functions():
@@ -9,6 +9,7 @@ def get_functions():
     return [
         {'label': elm, 'value': elm}
         for elm in dir(functions)
-        if callable(getattr(functions, elm)) and \
-            getmodule(getattr(functions, elm)).__name__ == 'datasetgen.functions'
+        if isclass(getattr(functions, elm)) and
+        issubclass(getattr(functions, elm), functions.GenFunction) and
+        getattr(functions, elm) is not functions.GenFunction
     ]

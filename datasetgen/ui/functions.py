@@ -23,14 +23,21 @@ class FunctionUI(object):
     def to_dict(self):
         raise NotImplementedError
 
+    @property
+    def name(self):
+        return repr(self)
 
-class base_function(FunctionUI):
+
+class RandomGenerator(FunctionUI):
 
     def __init__(self, app: 'dash.dash.Dash'):
         super().__init__(app)
         self._num_files = 1000
         self._min_file_size = 1000
         self._max_file_size = 4000
+
+    def __repr__(self):
+        return "Random Generator"
 
     def to_dict(self):
         return {

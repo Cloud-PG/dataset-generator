@@ -148,18 +148,23 @@ class Generator(object):
         if function_name not in dir(functions):
             importlib.reload(functions)
 
-        cur_function = getattr(functions, function_name)
-        gen = cur_function(**kwargs)
+        cur_gen_obj = getattr(functions, function_name)(**kwargs)
+        cur_gen_obj.num_req_x_day = self._num_req_x_day
+        cur_gen_fun = next(cur_gen_obj)
 
         delta = datetime.timedelta(days=1)
         cur_date = self._start_date
 
         for n_day in range(self._num_days):
             cur_day = Day(cur_date)
+            cur_gen_obj.day_idx = n_day
 
             for n_req in range(self._num_req_x_day):
-                cur_day.append(next(gen))
+                new_row, exit_ = next(cur_gen_fun)
+                cur_day.append(new_row)
                 yield int(float((n_day * self._num_req_x_day + n_req) / self.tot_num_requests) * 100.)
+                if exit_:
+                    break
 
             cur_day.reset_index()
 
