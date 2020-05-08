@@ -10,13 +10,13 @@ import pandas as pd
 from . import functions
 
 _COLUMNS = {
-    'Filename': "object",
-    'SiteName': "object",
+    'Filename': "int64",
+    'SiteName': "int64",
     'UserID': "int64",
     'TaskID': "int64",
-    'TaskMonitorID': "object",
+    'TaskMonitorID': "int64",
     'JobID': "int64",
-    'Protocol': "object",
+    'Protocol': "int64",
     'JobExecExitCode': "int64",
     'JobStart': "int64",
     'JobEnd': "int64",
@@ -24,14 +24,17 @@ _COLUMNS = {
     'WrapWC': "float64",
     'WrapCPU': "float64",
     'Size': "float64",
-    'DataType': "object",
-    'FileType': "object",
+    'DataType': "int64",
+    'FileType': "int64",
     'JobLengthH': "float64",
     'JobLengthM': "float64",
     'JobSuccess': "bool",
     'CPUTime': "float64",
     'IOTime': "float64",
     'reqDay': "int64",
+    'Region': "int64",
+    'Campain': "int64",
+    'Process': "int64",
 }
 
 
@@ -63,6 +66,7 @@ class Day(object):
 
     def append(self, row: dict):
         row['reqDay'] = int(time.mktime(self._date.timetuple()))
+        row['JobSuccess'] = True
         self._df = self._df.append(
             pd.Series(
                 [row[key] if key in row else None for key in _COLUMNS],
