@@ -1,6 +1,4 @@
 import random
-from itertools import combinations_with_replacement
-from string import ascii_letters
 
 
 class GenFunction(object):
@@ -43,13 +41,7 @@ class RandomGenerator(GenFunction):
         self._min_file_size = min_file_size
         self._max_file_size = max_file_size
 
-        file_len = 1
-        files = ascii_letters[:]
-        while len(files) < num_files:
-            files = ["".join(tuple_)
-                     for tuple_ in combinations_with_replacement(files, file_len)]
-            file_len += 1
-        self._files = files[:num_files]
+        self._files = list(range(num_files))
 
     def __repr__(self):
         return "Random Generator"
