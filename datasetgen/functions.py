@@ -33,15 +33,25 @@ class GenFunction(object):
         return repr(self)
 
 
+def gen_random_files(num_files: int, min_file_size: int, max_file_size: int):
+    return {
+        (
+            filename,
+            float(random.randint(min_file_size, max_file_size))
+        )
+        for filename in range(num_files)
+    }
+
+
 class RandomGenerator(GenFunction):
 
     def __init__(self, num_files: int, min_file_size: int, max_file_size: int):
         super().__init__()
-        self._num_files = num_files
-        self._min_file_size = min_file_size
-        self._max_file_size = max_file_size
+        self._num_files: int = num_files
+        self._min_file_size: int = min_file_size
+        self._max_file_size: int = max_file_size
 
-        self._files = list(range(num_files))
+        self._files = gen_random_files(num_files, min_file_size, max_file_size)
 
     def __repr__(self):
         return "Random Generator"
@@ -52,9 +62,47 @@ class RandomGenerator(GenFunction):
     def __next__(self):
         return self.next()
 
-    def next(self) -> 'generator':
+    def next(self) -> 'Generator[Tuple(dict, bool)]':
+        filenames: list = self._files.values()
         while True:
+            cur_file = filenames
+            cur_size = self._files[cur_file]
             yield {
-                'Filename': random.choice(self._files),
-                'Size': float(random.randint(self._min_file_size, self._max_file_size))
+                'Filename': cur_file,
+                'Size': cur_size,
+            }, False
+
+
+class PoissonGenerator(GenFunction):
+
+    def __init__(self, num_files: int, min_file_size: int, max_file_size: int,
+                 lambda_less_req_files: float, lambda_more_req_files: float,
+                 perc_more_req_files: float, ):
+        super().__init__()
+        self._num_files: int = num_files
+        self._min_file_size: int = min_file_size
+        self._max_file_size: int = max_file_size
+        self._lambda_less_req_files: float = lambda_less_req_files
+        self._lambda_more_req_files: float = lambda_more_req_files
+        self._perc_more_req_files: float = perc_more_req_files
+
+        self._files = gen_random_files(num_files, min_file_size, max_file_size)
+
+    def __repr__(self):
+        return "Poisson Generator"
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        return self.next()
+
+    def next(self) -> 'Generator[Tuple(dict, bool)]':
+        filenames: list = self._files.values()
+        while True:
+            cur_file = filenames
+            cur_size = self._files[cur_file]
+            yield {
+                'Filename': cur_file,
+                'Size': cur_size,
             }, False

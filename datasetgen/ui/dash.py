@@ -169,7 +169,7 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
     @app.callback(
         Output('num-day-val', 'children'),
         [Input('num-days', 'value')])
-    def update_output(value):
+    def update_num_days(value):
         generator.clean()
         generator.num_days = value
         return f"Num. Days: {value}"
@@ -177,7 +177,7 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
     @app.callback(
         Output('num-req-x-day-val', 'children'),
         [Input('num-req-x-day', 'value')])
-    def update_output(value):
+    def update_num_req_x_day(value):
         generator.num_req_x_day = value
         return f"Num. Req. x Day: {value}"
 
