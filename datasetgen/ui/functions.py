@@ -189,6 +189,15 @@ class PoissonGenerator(FunctionUI):
                 style={'display': "none"}),
             dbc.Row([
                 dbc.Col(
+                    html.Div(
+                        "NOTE: This function do NOT take into account the num. of req. x day parameter",
+                        style={'color': "rgb(251, 0, 0)",
+                               'padding-bottom': "2em"},
+                    ),
+                    width={'size': 9, 'offset': 3}),
+            ]),
+            dbc.Row([
+                dbc.Col(
                     html.H5(id=f'{self.name_id}-num-file-val',
                             children="Num. Files: "),
                     width={'size': 3, 'offset': 1}),
@@ -207,7 +216,7 @@ class PoissonGenerator(FunctionUI):
                         100000: {'label': '100000', 'style': {'font-size': "8px"}},
                     },
                 ), width=6)
-            ]),
+            ], style={'padding-bottom': "1em"}),
             dbc.Row([
                 dbc.Col(
                     html.H5(id=f'{self.name_id}-file-size-val',
@@ -229,7 +238,7 @@ class PoissonGenerator(FunctionUI):
                     },
                     allowCross=False,
                 ), width=6)
-            ]),
+            ], style={'padding-bottom': "1em"}),
             dbc.Row([
                 dbc.Col(
                     html.H5(children="Lambda less requested files"),
@@ -240,8 +249,8 @@ class PoissonGenerator(FunctionUI):
                     type="number",
                     placeholder="Lambda less requested files",
                     value=self._lambda_less_req_files,
-                ), width="auto"),
-            ]),
+                ), width={'size': "auto", 'offset': 1}),
+            ], style={'padding-bottom': "1em"}),
             dbc.Row([
                 dbc.Col(
                     html.H5(children="Lambda more requested files"),
@@ -252,8 +261,8 @@ class PoissonGenerator(FunctionUI):
                     type="number",
                     placeholder="Lambda more requested files",
                     value=self._lambda_more_req_files,
-                ), width="auto"),
-            ]),
+                ), width={'size': "auto", 'offset': 1}),
+            ], style={'padding-bottom': "1em"}),
             dbc.Row([
                 dbc.Col(
                     html.H5(id=f'{self.name_id}-perc-more-req-files-val',
@@ -278,5 +287,5 @@ class PoissonGenerator(FunctionUI):
                         100: {'label': '100%', 'style': {'font-size': "8px"}},
                     },
                 ), width=6)
-            ]),
+            ], style={'padding-bottom': "1em"}),
         ])
