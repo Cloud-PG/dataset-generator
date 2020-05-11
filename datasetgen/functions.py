@@ -1,16 +1,8 @@
 import random
+
 from numpy import random as np_random
 
-
-def gen_random_files(num_files: int, min_file_size: int, max_file_size: int) -> dict:
-    """Generates a dict with random files with a random size."""
-    return {
-        (
-            filename,
-            float(random.randint(min_file_size, max_file_size))
-        )
-        for filename in range(num_files)
-    }
+from .utils import gen_fake_cpu_work, gen_random_files
 
 
 class GenFunction(object):

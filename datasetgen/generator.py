@@ -8,40 +8,13 @@ from pathlib import Path, PurePath
 import pandas as pd
 
 from . import functions
-
-_COLUMNS = {
-    'Filename': "int64",
-    'SiteName': "int64",
-    'UserID': "int64",
-    'TaskID': "int64",
-    'TaskMonitorID': "int64",
-    'JobID': "int64",
-    'Protocol': "int64",
-    'JobExecExitCode': "int64",
-    'JobStart': "int64",
-    'JobEnd': "int64",
-    'NumCPU': "int64",
-    'WrapWC': "float64",
-    'WrapCPU': "float64",
-    'Size': "float64",
-    'DataType': "int64",
-    'FileType': "int64",
-    'JobLengthH': "float64",
-    'JobLengthM': "float64",
-    'JobSuccess': "bool",
-    'CPUTime': "float64",
-    'IOTime': "float64",
-    'reqDay': "int64",
-    'Region': "int64",
-    'Campain': "int64",
-    'Process': "int64",
-}
+from .utils import COLUMNS, gen_fake_cpu_work
 
 
 def _make_empty_df() -> 'pd.DataFrame':
     df = pd.DataFrame(index=None)
 
-    for column, type_ in _COLUMNS.items():
+    for column, type_ in COLUMNS.items():
         df[column] = pd.Series(dtype=type_)
 
     return df
@@ -67,10 +40,30 @@ class Day(object):
     def append(self, row: dict):
         row['reqDay'] = int(time.mktime(self._date.timetuple()))
         row['JobSuccess'] = True
+        row['SiteName'] = 0
+        row['DataType'] = 0
+        row['FileType'] = 0
+
+        for key in row:
+            if key not in [
+                'NumCPU',
+                'WrapWC',
+                'WrapCPU',
+                'CPUTime',
+                'IOTime',
+            ]:
+                num_cpus, wall_time, cpu_time, single_cpu_time, io_time = gen_fake_cpu_work()
+                row['NumCPU'] = num_cpus
+                row['WrapWC'] = wall_time
+                row['WrapCPU'] = cpu_time
+                row['CPUTime'] = single_cpu_time
+                row['IOTime'] = io_time
+                break
+
         self._df = self._df.append(
             pd.Series(
-                [row[key] if key in row else None for key in _COLUMNS],
-                index=_COLUMNS.keys()
+                [row[key] if key in row else None for key in COLUMNS],
+                index=COLUMNS.keys()
             ),
             ignore_index=True
         )

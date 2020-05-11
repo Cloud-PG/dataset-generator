@@ -1,3 +1,4 @@
+import random
 from argparse import ArgumentTypeError
 
 
@@ -10,3 +11,49 @@ def str2bool(v):
         return False
     else:
         raise ArgumentTypeError('Boolean value expected.')
+
+
+def gen_random_files(num_files: int,
+                     min_file_size: int, max_file_size: int) -> dict:
+    """Generates a dict with random files with a random size."""
+    return {
+        filename: float(random.randint(min_file_size, max_file_size))
+        for filename in range(num_files)
+    }
+
+
+def gen_fake_cpu_work(num_cpus: int = 1):
+    wall_time = float(random.randint(60, 600))
+    single_cpu_time = (random.random() * wall_time)
+    cpu_time = float(single_cpu_time * num_cpus)
+    io_time = wall_time - float((cpu_time) / num_cpus)
+    return num_cpus, wall_time, cpu_time, single_cpu_time, io_time
+
+
+COLUMNS = {
+    'Filename': "int64",
+    'SiteName': "int64",
+    'UserID': "int64",
+    'TaskID': "int64",
+    'TaskMonitorID': "int64",
+    'JobID': "int64",
+    'Protocol': "int64",
+    'JobExecExitCode': "int64",
+    'JobStart': "int64",
+    'JobEnd': "int64",
+    'NumCPU': "int64",
+    'WrapWC': "float64",
+    'WrapCPU': "float64",
+    'Size': "float64",
+    'DataType': "int64",
+    'FileType': "int64",
+    'JobLengthH': "float64",
+    'JobLengthM': "float64",
+    'JobSuccess': "bool",
+    'CPUTime': "float64",
+    'IOTime': "float64",
+    'reqDay': "int64",
+    'Region': "int64",
+    'Campain': "int64",
+    'Process': "int64",
+}
