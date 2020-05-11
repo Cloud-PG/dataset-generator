@@ -54,10 +54,10 @@ class RandomGenerator(GenFunction):
         filenames: list = list(self._files.keys())
         for _ in range(max_num):
             cur_file = random.choice(filenames)
-            cur_size = self._files[cur_file]
             yield {
                 'Filename': cur_file,
-                'Size': cur_size,
+                'Size': self._files[cur_file]['Size'],
+                'Protocol': self._files[cur_file]['Protocol'],
             }, None
 
 
@@ -98,18 +98,20 @@ class PoissonGenerator(GenFunction):
 
         all_requests = []
 
-        for idx, (cur_file, cur_size) in enumerate(self._more_req_files.items()):
+        for idx, (cur_file, file_info) in enumerate(self._more_req_files.items()):
             for _ in range(more_req_files_freq[idx]):
                 all_requests.append({
                     'Filename': cur_file,
-                    'Size': cur_size,
+                    'Size': file_info[cur_file]['Size'],
+                    'Protocol': file_info[cur_file]['Protocol'],
                 })
 
-        for idx, (cur_file, cur_size) in enumerate(self._less_req_files.items()):
+        for idx, (cur_file, file_info) in enumerate(self._less_req_files.items()):
             for _ in range(less_req_files_freq[idx]):
                 all_requests.append({
                     'Filename': cur_file,
-                    'Size': cur_size,
+                    'Size': file_info[cur_file]['Size'],
+                    'Protocol': file_info[cur_file]['Protocol'],
                 })
 
         random.shuffle(all_requests)
