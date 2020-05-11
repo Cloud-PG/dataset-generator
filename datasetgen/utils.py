@@ -1,6 +1,8 @@
 import random
 from argparse import ArgumentTypeError
 
+import numpy as np
+
 
 def str2bool(v):
     if isinstance(v, bool):
@@ -16,9 +18,21 @@ def str2bool(v):
 def gen_random_files(num_files: int,
                      min_file_size: int, max_file_size: int) -> dict:
     """Generates a dict with random files with a random size."""
+    sizes = []
+    for size in [
+        float(elm * 1024.)
+        for elm in np.random.poisson(lam=4, size=num_files)
+    ]:
+        if size >= min_file_size and size <= max_file_size:
+            sizes.append(size)
+        elif size < min_file_size:
+            sizes.append(min_file_size)
+        else:
+            sizes.append(max_file_size)
+
     return {
         filename: {
-            'Size': float(random.randint(min_file_size, max_file_size)),
+            'Size': sizes[filename],
             'Protocol': random.randint(0, 1)
         }
         for filename in range(num_files)
