@@ -29,7 +29,7 @@ class GenFunction(object):
         self._num_req_x_day = value
         return self
 
-    def next(self):
+    def gen_day_elements(self, max_num: int = -1):
         raise NotImplementedError
 
     @property
@@ -50,21 +50,15 @@ class RandomGenerator(GenFunction):
     def __repr__(self):
         return "Random Generator"
 
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        return self.next()
-
-    def next(self) -> 'Generator[Tuple(dict, bool)]':
-        filenames: list = self._files.values()
-        while True:
-            cur_file = filenames
+    def gen_day_elements(self, max_num: int = -1):
+        filenames: list = list(self._files.keys())
+        for _ in range(max_num):
+            cur_file = random.choice(filenames)
             cur_size = self._files[cur_file]
             yield {
                 'Filename': cur_file,
                 'Size': cur_size,
-            }, False
+            }, None
 
 
 class PoissonGenerator(GenFunction):
@@ -94,13 +88,7 @@ class PoissonGenerator(GenFunction):
     def __repr__(self):
         return "Poisson Generator"
 
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        return self.next()
-
-    def next(self) -> 'Generator[Tuple(dict, bool)]':
+    def gen_day_elements(self, max_num: int = -1):
         more_req_files_freq = np_random.poisson(
             lam=self._lambda_more_req_files, size=self._num_more_req_files
         )
@@ -126,7 +114,5 @@ class PoissonGenerator(GenFunction):
 
         random.shuffle(all_requests)
 
-        for elm in all_requests[:-1]:
-            yield elm, False
-        else:
-            yield all_requests[-1], True
+        for num, elm in enumerate(all_requests):
+            yield elm, float(num / len(all_requests)) * 100.

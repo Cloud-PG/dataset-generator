@@ -35,7 +35,7 @@ class RandomGenerator(FunctionUI):
 
     def __init__(self, app: 'dash.dash.Dash'):
         super().__init__(app)
-        self._num_files = 1000
+        self._num_files = 100
         self._min_file_size = 1000
         self._max_file_size = 4000
 
@@ -117,7 +117,7 @@ class PoissonGenerator(FunctionUI):
 
     def __init__(self, app: 'dash.dash.Dash'):
         super().__init__(app)
-        self._num_files: int = 1000
+        self._num_files: int = 100
         self._min_file_size: int = 1000
         self._max_file_size: int = 4000
         self._lambda_less_req_files: float = 1.

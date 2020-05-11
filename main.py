@@ -16,7 +16,7 @@ def main():
                         help='use the graphic user interface')
     parser.add_argument('--ui-debug', type=str2bool, default=True,
                         help='use the graphic user interface in debug mode')
-    parser.add_argument('--num-days', type=int, default=1,
+    parser.add_argument('--num-days', type=int, default=-1,
                         help='total number of days to create')
     parser.add_argument('--dest-folder', type=str, default="dataset",
                         help='name of the output folder')
@@ -38,14 +38,15 @@ def main():
             num_days=args.num_days,
             dest_folder=Path(".").parent.resolve().joinpath(args.dest_folder),
         )
-        for _ in tqdm(generator.prepare(),
-                      desc="Prepare dataset", 
-                      total=generator.tot_num_requests, 
-                      ascii=True):
-            pass
+        with tqdm(desc="Prepare dataset days", total=100, ascii=True) as pbar:
+            prev_perc = 0.
+            for cur_perc in generator.prepare(**config['function']):
+                pbar.update(cur_perc - prev_perc)
+                prev_perc = cur_perc
+
         for _ in tqdm(generator.save(),
-                      desc="Save dataset", 
-                      total=generator.num_days, 
+                      desc="Save dataset",
+                      total=generator.num_days,
                       ascii=True):
             pass
 

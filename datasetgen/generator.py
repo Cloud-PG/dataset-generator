@@ -79,8 +79,8 @@ class Generator(object):
 
     def __init__(self,
                  config: dict = {},
-                 num_days: int = 1,
-                 num_req_x_day: int = 1000,
+                 num_days: int = -1,
+                 num_req_x_day: int = -1,
                  start_date: 'datetime.date' = datetime.date(2020, 1, 1),
                  dest_folder: 'PurePath' = Path("."),
                  ):
@@ -90,8 +90,11 @@ class Generator(object):
         for key, val in config.items():
             setattr(self, f"_{key}", val)
 
-        self._num_days = num_days
-        self._num_req_x_day = num_req_x_day
+        if num_days != -1:
+            self._num_days = num_days
+        if num_req_x_day != -1:
+            self._num_req_x_day = num_req_x_day
+
         self._dest_folder = dest_folder
 
     @property
@@ -143,13 +146,12 @@ class Generator(object):
     def clean(self):
         del self._days[:]
 
-    def prepare(self, function_name, kwargs: dict):
+    def prepare(self, function_name: str, kwargs: dict):
         if function_name not in dir(functions):
             importlib.reload(functions)
 
         cur_gen_obj = getattr(functions, function_name)(**kwargs)
         cur_gen_obj.num_req_x_day = self._num_req_x_day
-        cur_gen_fun = None
 
         delta = datetime.timedelta(days=1)
         cur_date = self._start_date
@@ -158,18 +160,12 @@ class Generator(object):
             cur_day = Day(cur_date)
             cur_gen_obj.day_idx = n_day
 
-            if cur_gen_fun is None:
-                cur_gen_fun = next(cur_gen_obj)
-
-            for n_req in range(self._num_req_x_day):
-                new_row, exit_ = next(cur_gen_fun)
-                cur_day.append(new_row)
-                yield int(float((n_day * self._num_req_x_day + n_req) / self.tot_num_requests) * 100.)
-                if exit_:
-                    cur_gen_fun = None
-                    break
-            else:
-                cur_gen_fun = None
+            for n_req, (elm, percentage) in enumerate(cur_gen_obj.gen_day_elements(self._num_req_x_day)):
+                cur_day.append(elm)
+                if percentage is None:
+                    yield int(float((n_day * self._num_req_x_day + n_req) / self.tot_num_requests) * 100.)
+                else:
+                    yield int((percentage + (n_day * 100.)) / (self._num_days * 100.) * 100.)
 
             cur_day.reset_index()
 
@@ -177,7 +173,6 @@ class Generator(object):
                 cur_day
             )
             cur_date = cur_date + delta
-            yield int(float((n_day * self._num_req_x_day + n_req) / self.tot_num_requests) * 100.)
 
         yield 100
 
