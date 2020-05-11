@@ -1,4 +1,16 @@
 import random
+from numpy import random as np_random
+
+
+def gen_random_files(num_files: int, min_file_size: int, max_file_size: int) -> dict:
+    """Generates a dict with random files with a random size."""
+    return {
+        (
+            filename,
+            float(random.randint(min_file_size, max_file_size))
+        )
+        for filename in range(num_files)
+    }
 
 
 class GenFunction(object):
@@ -31,16 +43,6 @@ class GenFunction(object):
     @property
     def name(self):
         return repr(self)
-
-
-def gen_random_files(num_files: int, min_file_size: int, max_file_size: int):
-    return {
-        (
-            filename,
-            float(random.randint(min_file_size, max_file_size))
-        )
-        for filename in range(num_files)
-    }
 
 
 class RandomGenerator(GenFunction):
@@ -86,7 +88,16 @@ class PoissonGenerator(GenFunction):
         self._lambda_more_req_files: float = lambda_more_req_files
         self._perc_more_req_files: float = perc_more_req_files
 
-        self._files = gen_random_files(num_files, min_file_size, max_file_size)
+        self._num_more_req_files = int(
+            (num_files / 100.) * perc_more_req_files)
+        self._num_less_req_files = num_files - self._num_more_req_files
+
+        self._more_req_files = gen_random_files(
+            self._num_more_req_files, min_file_size, max_file_size
+        )
+        self._less_req_files = gen_random_files(
+            self._num_less_req_files, min_file_size, max_file_size
+        )
 
     def __repr__(self):
         return "Poisson Generator"
@@ -98,11 +109,32 @@ class PoissonGenerator(GenFunction):
         return self.next()
 
     def next(self) -> 'Generator[Tuple(dict, bool)]':
-        filenames: list = self._files.values()
-        while True:
-            cur_file = filenames
-            cur_size = self._files[cur_file]
-            yield {
-                'Filename': cur_file,
-                'Size': cur_size,
-            }, False
+        more_req_files_freq = np_random.poisson(
+            lam=self._lambda_more_req_files, size=self._num_more_req_files
+        )
+        less_req_files_freq = np_random.poisson(
+            lam=self._lambda_less_req_files, size=self._num_less_req_files
+        )
+
+        all_requests = []
+
+        for idx, (cur_file, cur_size) in enumerate(self._more_req_files.items()):
+            for _ in range(more_req_files_freq[idx]):
+                all_requests.append({
+                    'Filename': cur_file,
+                    'Size': cur_size,
+                })
+
+        for idx, (cur_file, cur_size) in enumerate(self._less_req_files.items()):
+            for _ in range(less_req_files_freq[idx]):
+                all_requests.append({
+                    'Filename': cur_file,
+                    'Size': cur_size,
+                })
+
+        random.shuffle(all_requests)
+
+        for elm in all_requests[:-1]:
+            yield elm, False
+        else:
+            yield all_requests[-1], True
