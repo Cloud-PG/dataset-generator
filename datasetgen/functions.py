@@ -93,6 +93,9 @@ class PoissonGenerator(GenFunction):
             start_from=self._num_more_req_files,
         )
 
+        assert len(set(self._more_req_files.keys()) &
+                   set(self._less_req_files.keys())) == 0
+
     def __repr__(self):
         return "Poisson Generator"
 
