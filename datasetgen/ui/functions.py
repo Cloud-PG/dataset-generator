@@ -36,8 +36,9 @@ class RandomGenerator(FunctionUI):
     def __init__(self, app: 'dash.dash.Dash'):
         super().__init__(app)
         self._num_files = 100
-        self._min_file_size = 1000
-        self._max_file_size = 4000
+        self._min_file_size = 100
+        self._max_file_size = 24000
+        self._size_function_generator = "gen_random_sizes"
 
     def __repr__(self):
         return "Random Generator"
@@ -47,6 +48,7 @@ class RandomGenerator(FunctionUI):
             'num_files': self._num_files,
             'min_file_size': self._min_file_size,
             'max_file_size': self._max_file_size,
+            'size_generator_function': self._size_function_generator,
         }
 
     def callbacks(self):
@@ -64,6 +66,17 @@ class RandomGenerator(FunctionUI):
         def change_size(value):
             self._min_file_size, self._max_file_size = value
             return f"File Size (MB): {self._min_file_size}-{self._max_file_size}"
+
+        @self._app.callback(
+            Output(f'{self.name_id}-size-function-val', 'children'),
+            [Input(f'{self.name_id}-size-function', 'value')],
+        )
+        def update_function_ui(value):
+            self._size_function_generator = value
+            if value == "gen_random_sizes":
+                return "File size function generator: [0]"
+            elif value == "gen_in_range_random_sizes":
+                return "File size function generator: [1]"
 
     def elements(self):
         return html.Div([
@@ -110,6 +123,22 @@ class RandomGenerator(FunctionUI):
                     allowCross=False,
                 ), width=6)
             ]),
+            dbc.Row([
+                dbc.Col(
+                    html.H5(id=f'{self.name_id}-size-function-val',
+                            children="File size function generator: [1]"),
+                    width={'size': 3, 'offset': 1}),
+                dbc.Col(dcc.Dropdown(
+                        id=f'{self.name_id}-size-function',
+                        options=[
+                            {'label': "(0) gen random sizes",
+                                'value': "gen_random_sizes"},
+                            {'label': "(1) gen in range random sizes",
+                                'value': "gen_in_range_random_sizes"},
+                        ],
+                        value='gen_in_range_random_sizes'
+                        ), width=6),
+            ]),
         ])
 
 
@@ -118,11 +147,12 @@ class PoissonGenerator(FunctionUI):
     def __init__(self, app: 'dash.dash.Dash'):
         super().__init__(app)
         self._num_files: int = 100
-        self._min_file_size: int = 1000
-        self._max_file_size: int = 4000
+        self._min_file_size: int = 100
+        self._max_file_size: int = 24000
         self._lambda_less_req_files: float = 1.
         self._lambda_more_req_files: float = 2.
         self._perc_more_req_files: float = 10.
+        self._size_function_generator = "gen_random_sizes"
 
     def __repr__(self):
         return "Poisson Generator"
@@ -135,6 +165,7 @@ class PoissonGenerator(FunctionUI):
             'lambda_less_req_files': self._lambda_less_req_files,
             'lambda_more_req_files': self._lambda_more_req_files,
             'perc_more_req_files': self._perc_more_req_files,
+            'size_generator_function': self._size_function_generator,
         }
 
     def callbacks(self):
@@ -154,6 +185,17 @@ class PoissonGenerator(FunctionUI):
         def change_size(value):
             self._min_file_size, self._max_file_size = value
             return f"File Size (MB): {self._min_file_size}-{self._max_file_size}"
+
+        @self._app.callback(
+            Output(f'{self.name_id}-size-function-val', 'children'),
+            [Input(f'{self.name_id}-size-function', 'value')],
+        )
+        def update_function_ui(value):
+            self._size_function_generator = value
+            if value == "gen_random_sizes":
+                return "File size function generator: [0]"
+            elif value == "gen_in_range_random_sizes":
+                return "File size function generator: [1]"
 
         @self._app.callback(
             Output(f'{self.name_id}-hidden-div-lambda-less', 'children'),
@@ -239,6 +281,22 @@ class PoissonGenerator(FunctionUI):
                     allowCross=False,
                 ), width=6)
             ], style={'padding-bottom': "1em"}),
+            dbc.Row([
+                dbc.Col(
+                    html.H5(id=f'{self.name_id}-size-function-val',
+                            children="File size function generator: [1]"),
+                    width={'size': 3, 'offset': 1}),
+                dbc.Col(dcc.Dropdown(
+                        id=f'{self.name_id}-size-function',
+                        options=[
+                            {'label': "(0) gen random sizes",
+                                'value': "gen_random_sizes"},
+                            {'label': "(1) gen in range random sizes",
+                                'value': "gen_in_range_random_sizes"},
+                        ],
+                        value='gen_in_range_random_sizes'
+                        ), width=6),
+            ], style={'padding-bottom': "2em"},),
             dbc.Row([
                 dbc.Col(
                     html.H5(children="Lambda less requested files"),

@@ -39,13 +39,17 @@ class GenFunction(object):
 
 class RandomGenerator(GenFunction):
 
-    def __init__(self, num_files: int, min_file_size: int, max_file_size: int):
+    def __init__(self, num_files: int, min_file_size: int, max_file_size: int,
+                 size_generator_function: str):
         super().__init__()
         self._num_files: int = num_files
         self._min_file_size: int = min_file_size
         self._max_file_size: int = max_file_size
+        self._size_generator_function: str = size_generator_function
 
-        self._files = gen_random_files(num_files, min_file_size, max_file_size)
+        self._files = gen_random_files(
+            num_files, min_file_size, max_file_size, size_generator_function
+        )
 
     def __repr__(self):
         return "Random Generator"
@@ -65,7 +69,7 @@ class PoissonGenerator(GenFunction):
 
     def __init__(self, num_files: int, min_file_size: int, max_file_size: int,
                  lambda_less_req_files: float, lambda_more_req_files: float,
-                 perc_more_req_files: float, ):
+                 perc_more_req_files: float, size_generator_function: str):
         super().__init__()
         self._num_files: int = num_files
         self._min_file_size: int = min_file_size
@@ -73,16 +77,20 @@ class PoissonGenerator(GenFunction):
         self._lambda_less_req_files: float = lambda_less_req_files
         self._lambda_more_req_files: float = lambda_more_req_files
         self._perc_more_req_files: float = perc_more_req_files
+        self._size_generator_function: str = size_generator_function
 
         self._num_more_req_files = int(
             (num_files / 100.) * perc_more_req_files)
         self._num_less_req_files = num_files - self._num_more_req_files
 
         self._more_req_files = gen_random_files(
-            self._num_more_req_files, min_file_size, max_file_size
+            self._num_more_req_files, min_file_size, max_file_size,
+            size_generator_function
         )
         self._less_req_files = gen_random_files(
-            self._num_less_req_files, min_file_size, max_file_size
+            self._num_less_req_files, min_file_size, max_file_size,
+            size_generator_function,
+            start_from=self._num_more_req_files,
         )
 
     def __repr__(self):
@@ -102,16 +110,14 @@ class PoissonGenerator(GenFunction):
             for _ in range(more_req_files_freq[idx]):
                 all_requests.append({
                     'Filename': cur_file,
-                    'Size': file_info[cur_file]['Size'],
-                    'Protocol': file_info[cur_file]['Protocol'],
+                    **file_info,
                 })
 
         for idx, (cur_file, file_info) in enumerate(self._less_req_files.items()):
             for _ in range(less_req_files_freq[idx]):
                 all_requests.append({
                     'Filename': cur_file,
-                    'Size': file_info[cur_file]['Size'],
-                    'Protocol': file_info[cur_file]['Protocol'],
+                    **file_info,
                 })
 
         random.shuffle(all_requests)
