@@ -1,14 +1,18 @@
 import datetime
 import importlib
 import json
+import random
 import shutil
 import time
 from pathlib import Path, PurePath
 
+import numpy as np
 import pandas as pd
 
 from . import functions
 from .utils import COLUMNS, gen_fake_cpu_work
+
+_DEFAULT_SEED = 42
 
 
 def _make_empty_df() -> 'pd.DataFrame':
@@ -82,10 +86,12 @@ class Generator(object):
                  num_days: int = -1,
                  num_req_x_day: int = -1,
                  start_date: 'datetime.date' = datetime.date(2020, 1, 1),
+                 seed: int = _DEFAULT_SEED,
                  dest_folder: 'PurePath' = Path("."),
                  ):
         self._start_date = start_date
         self._days = []
+        self._seed = seed
 
         for key, val in config.items():
             setattr(self, f"_{key}", val)
@@ -96,6 +102,17 @@ class Generator(object):
             self._num_req_x_day = num_req_x_day
 
         self._dest_folder = dest_folder
+
+    @property
+    def seed(self):
+        return self._seed
+
+    @seed.setter
+    def seed(self, value: int):
+        assert isinstance(value, int), "ERROR: value in not an integer"
+        self._seed = value
+        random.seed(self._seed)
+        np.random.seed(self._seed)
 
     @property
     def df(self):

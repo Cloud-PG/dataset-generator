@@ -14,6 +14,7 @@ from .utils import get_functions
 
 _EXTERNAL_STYLESHEETS = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 _PROGRESS = 100
+_DEFAULT_SEED = 42
 
 
 def _create_layout(app, dest_folder: 'Path', function_UIs: dict):
@@ -40,6 +41,18 @@ def _create_layout(app, dest_folder: 'Path', function_UIs: dict):
         html.Hr(),
         html.H3(children="Generator Parameters"),
         html.Hr(),
+        dbc.Row([
+            dbc.Col(
+                html.H5(id='seed-val', children="Seed: "),
+                width={'size': 3, 'offset': 1}
+            ),
+            dbc.Col(dcc.Input(
+                id='seed',
+                type="number",
+                placeholder="random seed value",
+                value=_DEFAULT_SEED,
+            ), width="auto")
+        ], style={'padding-bottom': "1em"}),
         dbc.Row([
             dbc.Col(
                 html.H5(id='num-day-val', children="Num. Days: "),
@@ -165,6 +178,14 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
         generator.dest_folder = Path(
             dest_folder).parent.joinpath(new_dest_folder)
         return ""
+
+    @app.callback(
+        Output("seed-val", "children"),
+        [Input("seed", "value")],
+    )
+    def change_seed(value):
+        generator.seed = value
+        return f"Seed: {value}"
 
     @app.callback(
         Output('num-day-val', 'children'),
