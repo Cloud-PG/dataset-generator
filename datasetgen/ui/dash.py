@@ -235,10 +235,22 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
     def inspect_dataset(n_clicks):
         if n_clicks:
             df = generator.df
+            file_frequencies = df.Filename.value_counts().reset_index()
+            file_frequencies.rename(
+                columns={'Filename': "# requests", 'index': "Filename"},
+                inplace=True
+            )
+            file_sizes = df[['Filename', 'Size']]
+            file_sizes.drop_duplicates("Filename", inplace=True)
             return [
-                dcc.Graph(figure=px.histogram(df, x="Filename")),
-                dcc.Graph(figure=px.histogram(df, x="Size")),
-                dcc.Graph(figure=px.line(df, y='Size')),
+                dcc.Graph(figure=px.bar(file_frequencies, x="Filename",
+                                        y="# requests", title="File requests")),
+                dcc.Graph(figure=px.bar(file_sizes, x="Filename",
+                                        y="Size", title="File sizes")),
+                dcc.Graph(figure=px.histogram(
+                    df, x="Size", title="Size distribution")),
+                dcc.Graph(figure=px.line(
+                    df, y='Size', title="Size during days")),
             ]
         return ""
 

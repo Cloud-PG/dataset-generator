@@ -142,7 +142,7 @@ class RandomGenerator(FunctionUI):
         ])
 
 
-class PoissonGenerator(FunctionUI):
+class HighFrequencyDataset(FunctionUI):
 
     def __init__(self, app: 'dash.dash.Dash'):
         super().__init__(app)
@@ -150,12 +150,12 @@ class PoissonGenerator(FunctionUI):
         self._min_file_size: int = 100
         self._max_file_size: int = 24000
         self._lambda_less_req_files: float = 1.
-        self._lambda_more_req_files: float = 2.
+        self._lambda_more_req_files: float = 10.
         self._perc_more_req_files: float = 10.
         self._size_function_generator = "gen_random_sizes"
 
     def __repr__(self):
-        return "Poisson Generator"
+        return "High Frequency Dataset"
 
     def to_dict(self):
         return {
@@ -232,7 +232,7 @@ class PoissonGenerator(FunctionUI):
             dbc.Row([
                 dbc.Col(
                     html.Div(
-                        "NOTE: This function do NOT take into account the num. of req. x day parameter",
+                        "NOTE: This function do NOT take into account the above num. of req. x day parameter",
                         style={'color': "rgb(251, 0, 0)",
                                'padding-bottom': "2em"},
                     ),

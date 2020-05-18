@@ -65,7 +65,7 @@ class RandomGenerator(GenFunction):
             }, None
 
 
-class PoissonGenerator(GenFunction):
+class HighFrequencyDataset(GenFunction):
 
     def __init__(self, num_files: int, min_file_size: int, max_file_size: int,
                  lambda_less_req_files: float, lambda_more_req_files: float,
@@ -97,7 +97,7 @@ class PoissonGenerator(GenFunction):
                    set(self._less_req_files.keys())) == 0
 
     def __repr__(self):
-        return "Poisson Generator"
+        return "High Frequency Dataset"
 
     def gen_day_elements(self, max_num: int = -1):
         more_req_files_freq = np_random.poisson(
