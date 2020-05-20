@@ -1,6 +1,6 @@
 {
     "seed": 42,
-    "num_days": 3,
+    "num_days": 90,
     "num_req_x_day": 10000,
     "dest_folder": "SizeFocusedDataset",
     "function": {
