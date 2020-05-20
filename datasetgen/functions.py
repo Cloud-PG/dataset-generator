@@ -131,3 +131,57 @@ class HighFrequencyDataset(GenFunction):
 
         for num, elm in enumerate(all_requests):
             yield elm, float(num / len(all_requests)) * 100.
+
+
+class RecencyFocusedDataset(GenFunction):
+
+    def __init__(self, num_files: int, min_file_size: int, max_file_size: int,
+                 perc_noise: float, perc_files_x_day: float,
+                 size_generator_function: str):
+        super().__init__()
+        self._num_files: int = num_files
+        self._min_file_size: int = min_file_size
+        self._max_file_size: int = max_file_size
+        self._perc_noise: float = perc_noise
+        self._perc_files_x_day: float = perc_files_x_day
+        self._size_generator_function: str = size_generator_function
+
+        self._files = gen_random_files(
+            num_files, min_file_size, max_file_size,
+            size_generator_function
+        )
+
+    def __repr__(self):
+        return "Recency Focused Dataset"
+
+    def gen_day_elements(self, max_num: int = -1):
+        all_requests = []
+        file_perc_x_day = self._perc_files_x_day / 100.
+        perc_noise = self._perc_noise / 100.
+        all_file_names = list(self._files.keys())
+        max_num_req = random.randint(2, max_num)
+
+        while len(all_requests) < max_num:
+            for cur_file, file_info in self._files.items():
+                if random.random() <= file_perc_x_day:
+                    if len(all_requests) == max_num:
+                        break
+                    num_requests = random.randint(1, max_num_req)
+                    for _ in range(num_requests):
+                        if random.random() <= perc_noise:
+                            noise_file = random.choice(all_file_names)
+                            noise_file_info = self._files[noise_file]
+                            all_requests.append({
+                                'Filename': noise_file,
+                                **noise_file_info,
+                            })
+                        else:
+                            all_requests.append({
+                                'Filename': cur_file,
+                                **file_info,
+                            })
+                        if len(all_requests) == max_num:
+                            break
+
+        for num, elm in enumerate(all_requests):
+            yield elm, float(num / len(all_requests)) * 100.

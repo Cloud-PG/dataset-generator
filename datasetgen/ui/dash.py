@@ -250,7 +250,9 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
                 dcc.Graph(figure=px.histogram(
                     df, x="Size", title="Size distribution")),
                 dcc.Graph(figure=px.line(
-                    df, y='Size', title="Size during days")),
+                    df, y='Size', title="Sizes during days")),
+                dcc.Graph(figure=px.scatter(
+                    df, y='Filename', title="Files during days")),
             ]
         return ""
 
