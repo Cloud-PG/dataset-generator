@@ -152,6 +152,7 @@ class HighFrequencyDataset(FunctionUI):
         self._lambda_less_req_files: float = 1.
         self._lambda_more_req_files: float = 10.
         self._perc_more_req_files: float = 10.
+        self._perc_files_x_day: float = 25.
         self._size_function_generator = "gen_random_sizes"
 
     def __repr__(self):
@@ -165,6 +166,7 @@ class HighFrequencyDataset(FunctionUI):
             'lambda_less_req_files': self._lambda_less_req_files,
             'lambda_more_req_files': self._lambda_more_req_files,
             'perc_more_req_files': self._perc_more_req_files,
+            'perc_files_x_day': self._perc_files_x_day,
             'size_generator_function': self._size_function_generator,
         }
 
@@ -218,6 +220,14 @@ class HighFrequencyDataset(FunctionUI):
         def change_percentage_more_req_files(value):
             self._perc_more_req_files = value
             return f"More requested files: {value}%"
+
+        @self._app.callback(
+            Output(f'{self.name_id}-perc-files-x-day-val', 'children'),
+            [Input(f'{self.name_id}-perc-files-x-day', 'value')],
+        )
+        def change_percentage_more_req_files(value):
+            self._perc_files_x_day = value
+            return f"Files x day: {value}%"
 
     def elements(self):
         return html.Div([
@@ -332,6 +342,31 @@ class HighFrequencyDataset(FunctionUI):
                     max=100,
                     step=1,
                     value=self._perc_more_req_files,
+                    marks={
+                        10: {'label': '10%', 'style': {'font-size': "8px"}},
+                        20: {'label': '20%', 'style': {'font-size': "8px"}},
+                        30: {'label': '30%', 'style': {'font-size': "8px"}},
+                        40: {'label': '40%', 'style': {'font-size': "8px"}},
+                        50: {'label': '50%', 'style': {'font-size': "8px"}},
+                        60: {'label': '60%', 'style': {'font-size': "8px"}},
+                        70: {'label': '70%', 'style': {'font-size': "8px"}},
+                        80: {'label': '80%', 'style': {'font-size': "8px"}},
+                        90: {'label': '90%', 'style': {'font-size': "8px"}},
+                        100: {'label': '100%', 'style': {'font-size': "8px"}},
+                    },
+                ), width=6)
+            ], style={'padding-bottom': "1em"}),
+            dbc.Row([
+                dbc.Col(
+                    html.H5(id=f'{self.name_id}-perc-files-x-day-val',
+                            children="Files x day: %"),
+                    width={'size': 3, 'offset': 1}),
+                dbc.Col(dcc.Slider(
+                    id=f'{self.name_id}-perc-files-x-day',
+                    min=1,
+                    max=100,
+                    step=1,
+                    value=self._perc_files_x_day,
                     marks={
                         10: {'label': '10%', 'style': {'font-size': "8px"}},
                         20: {'label': '20%', 'style': {'font-size': "8px"}},

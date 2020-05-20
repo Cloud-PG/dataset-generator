@@ -69,7 +69,8 @@ class HighFrequencyDataset(GenFunction):
 
     def __init__(self, num_files: int, min_file_size: int, max_file_size: int,
                  lambda_less_req_files: float, lambda_more_req_files: float,
-                 perc_more_req_files: float, size_generator_function: str):
+                 perc_more_req_files: float, perc_files_x_day: float,
+                 size_generator_function: str):
         super().__init__()
         self._num_files: int = num_files
         self._min_file_size: int = min_file_size
@@ -77,6 +78,7 @@ class HighFrequencyDataset(GenFunction):
         self._lambda_less_req_files: float = lambda_less_req_files
         self._lambda_more_req_files: float = lambda_more_req_files
         self._perc_more_req_files: float = perc_more_req_files
+        self._perc_files_x_day: float = perc_files_x_day
         self._size_generator_function: str = size_generator_function
 
         self._num_more_req_files = int(
@@ -110,18 +112,20 @@ class HighFrequencyDataset(GenFunction):
         all_requests = []
 
         for idx, (cur_file, file_info) in enumerate(self._more_req_files.items()):
-            for _ in range(more_req_files_freq[idx]):
-                all_requests.append({
-                    'Filename': cur_file,
-                    **file_info,
-                })
+            if random.random() * 100. <= self._perc_files_x_day:
+                for _ in range(more_req_files_freq[idx]):
+                    all_requests.append({
+                        'Filename': cur_file,
+                        **file_info,
+                    })
 
         for idx, (cur_file, file_info) in enumerate(self._less_req_files.items()):
-            for _ in range(less_req_files_freq[idx]):
-                all_requests.append({
-                    'Filename': cur_file,
-                    **file_info,
-                })
+            if random.random() * 100. <= self._perc_files_x_day:
+                for _ in range(less_req_files_freq[idx]):
+                    all_requests.append({
+                        'Filename': cur_file,
+                        **file_info,
+                    })
 
         random.shuffle(all_requests)
 
