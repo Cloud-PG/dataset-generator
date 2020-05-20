@@ -159,29 +159,39 @@ class RecencyFocusedDataset(GenFunction):
         file_perc_x_day = self._perc_files_x_day / 100.
         perc_noise = self._perc_noise / 100.
         all_file_names = list(self._files.keys())
-        max_num_req = int(max_num / (len(self._files) * file_perc_x_day))
+
+        min_num_req = int(max_num / (len(self._files) * file_perc_x_day))
+        max_num_req = min_num_req * 2
+        min_num_req = min_num_req / 2
+
+        filenames = list(self._files.keys())
+        num_visible_files = int(len(self._files) * file_perc_x_day)
+
+        random.shuffle(filenames)
+        filenames = filenames[:num_visible_files]
 
         while len(all_requests) < max_num:
-            for cur_file, file_info in self._files.items():
-                if random.random() <= file_perc_x_day:
+            random.shuffle(filenames)
+            for cur_file in filenames:
+                if len(all_requests) == max_num:
+                    break
+                num_requests = random.randint(min_num_req, max_num_req)
+                file_info = self._files[cur_file]
+                for _ in range(num_requests):
+                    if random.random() <= perc_noise:
+                        noise_file = random.choice(filenames)
+                        noise_file_info = self._files[noise_file]
+                        all_requests.append({
+                            'Filename': noise_file,
+                            **noise_file_info,
+                        })
+                    else:
+                        all_requests.append({
+                            'Filename': cur_file,
+                            **file_info,
+                        })
                     if len(all_requests) == max_num:
                         break
-                    num_requests = random.randint(1, max_num_req)
-                    for _ in range(num_requests):
-                        if random.random() <= perc_noise:
-                            noise_file = random.choice(all_file_names)
-                            noise_file_info = self._files[noise_file]
-                            all_requests.append({
-                                'Filename': noise_file,
-                                **noise_file_info,
-                            })
-                        else:
-                            all_requests.append({
-                                'Filename': cur_file,
-                                **file_info,
-                            })
-                        if len(all_requests) == max_num:
-                            break
 
         for num, elm in enumerate(all_requests):
             yield elm, float(num / len(all_requests)) * 100.
@@ -226,15 +236,21 @@ class SizeFocusedDataset(GenFunction):
         all_requests = []
         file_perc_x_day = self._perc_files_x_day / 100.
 
+        filenames = list(self._files.keys())
+        num_visible_files = int(len(self._files) * file_perc_x_day)
+
+        random.shuffle(filenames)
+        filenames = filenames[:num_visible_files]
+
         while len(all_requests) < max_num:
-            for cur_file, file_info in self._files.items():
-                if random.random() <= file_perc_x_day:
-                    if len(all_requests) == max_num:
-                        break
-                    all_requests.append({
-                        'Filename': cur_file,
-                        **file_info,
-                    })
+            random.shuffle(filenames)
+            for cur_file in filenames:
+                if len(all_requests) == max_num:
+                    break
+                all_requests.append({
+                    'Filename': cur_file,
+                    **self._files[cur_file],
+                })
 
         for num, elm in enumerate(all_requests):
             yield elm, float(num / len(all_requests)) * 100.

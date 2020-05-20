@@ -5,7 +5,9 @@ import dash
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
+import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 from dash.dependencies import Input, Output, State
 
 from ..generator import Generator
@@ -255,27 +257,56 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
     def inspect_dataset(n_clicks):
         if n_clicks:
             df = generator.df
+            # TODO: move dataframe operation on generator
             file_frequencies = df.Filename.value_counts().reset_index()
             file_frequencies.rename(
                 columns={'Filename': "# requests", 'index': "Filename"},
                 inplace=True
             )
+            num_files = df.groupby('reqDay').Filename.nunique()
+            num_files = num_files.reset_index()
+            num_files['day'] = pd.to_datetime(num_files.reqDay, unit="s")
+            num_files.rename(
+                columns={'Filename': "numFiles"},
+                inplace=True
+            )
+            num_req = df.groupby('reqDay').size()
+            num_req = num_req.reset_index()
+            num_req.rename(
+                columns={0: 'numReq'},
+                inplace=True
+            )
+            num_req['day'] = pd.to_datetime(num_req.reqDay, unit="s")
+
+            daily_stats = go.Figure(data=[
+                go.Bar(name='Files', x=num_files.day,
+                       y=num_files.numFiles),
+                go.Bar(name='Requests', x=num_req.day,
+                       y=num_req.numReq),
+            ])
+            daily_stats.update_layout(title="# files and requests x day")
+
             file_sizes = df[['Filename', 'Size']].copy()
             file_sizes.drop_duplicates("Filename", inplace=True)
             return [
+                dcc.Graph(figure=daily_stats),
                 dcc.Graph(figure=px.bar(file_frequencies, x="Filename",
-                                        y="# requests", title="File requests")),
+                                        y="# requests", title="File requests"
+                                        )),
                 dcc.Graph(figure=px.bar(file_sizes, x="Filename",
-                                        y="Size", title="File sizes")),
+                                        y="Size", title="File sizes"
+                                        )),
                 dcc.Graph(figure=px.histogram(
-                    df, x="Size", title="Size distribution")),
+                    df, x="Size", title="Size distribution"
+                )),
                 dcc.Graph(figure=px.scatter(
                     df, y='Size', size='Size',
                     title="Sizes during days")
                 ),
                 dcc.Graph(figure=px.scatter(
                     df, y='Filename', color="Filename",
-                    title="Files during days")),
+                    title="Files during days"
+                )),
             ], True, "Inspection donw. Result plots are ready!"
         return "", False, ""
 
