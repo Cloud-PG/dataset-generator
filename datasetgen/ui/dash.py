@@ -240,7 +240,7 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
                 columns={'Filename': "# requests", 'index': "Filename"},
                 inplace=True
             )
-            file_sizes = df[['Filename', 'Size']]
+            file_sizes = df[['Filename', 'Size']].copy()
             file_sizes.drop_duplicates("Filename", inplace=True)
             return [
                 dcc.Graph(figure=px.bar(file_frequencies, x="Filename",
