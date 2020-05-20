@@ -225,7 +225,7 @@ class HighFrequencyDataset(FunctionUI):
             Output(f'{self.name_id}-perc-files-x-day-val', 'children'),
             [Input(f'{self.name_id}-perc-files-x-day', 'value')],
         )
-        def change_percentage_more_req_files(value):
+        def change_percentage_files_x_day(value):
             self._perc_files_x_day = value
             return f"Files x day: {value}%"
 
