@@ -158,11 +158,12 @@ class RecencyFocusedDataset(GenFunction):
         all_requests = []
         file_perc_x_day = self._perc_files_x_day / 100.
         perc_noise = self._perc_noise / 100.
-        all_file_names = list(self._files.keys())
 
         min_num_req = int(max_num / (len(self._files) * file_perc_x_day))
-        max_num_req = min_num_req * 2
-        min_num_req = min_num_req / 2
+        max_num_req = int(min_num_req * 2)
+        min_num_req = int(min_num_req / 2)
+
+        assert min_num_req != 0, "Check file perc. x day, is too high respect the # of files"
 
         filenames = list(self._files.keys())
         num_visible_files = int(len(self._files) * file_perc_x_day)
