@@ -102,6 +102,7 @@ class Generator(object):
             self._num_req_x_day = num_req_x_day
 
         self._dest_folder = dest_folder
+        self.__update_seeds()
 
     @property
     def seed(self):
@@ -111,6 +112,9 @@ class Generator(object):
     def seed(self, value: int):
         assert isinstance(value, int), "ERROR: value in not an integer"
         self._seed = value
+        self.__update_seeds()
+
+    def __update_seeds(self):
         random.seed(self._seed)
         np.random.seed(self._seed)
 
