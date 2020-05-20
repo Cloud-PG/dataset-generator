@@ -23,7 +23,38 @@ def _create_layout(app, dest_folder: 'Path', function_UIs: dict):
         dcc.Interval(id='progress-interval', n_intervals=0, interval=750),
         # For empty output callbacks
         html.Div(id='hidden-div', style={'display': "none"}),
-
+        html.Div(children=[
+            dbc.Toast(
+                "",
+                id="dataset-prepare-info-alert",
+                header="Dataset prepare",
+                icon="info",
+                is_open=False,
+                duration=2000,
+                style={"position": "fixed", "top": 8,
+                       "right": 8, "width": 480},
+            ),
+            dbc.Toast(
+                "",
+                id="dataset-inspect-info-alert",
+                header="Dataset inpsect",
+                icon="success",
+                is_open=False,
+                duration=2000,
+                style={"position": "fixed", "top": 8,
+                       "right": 8, "width": 480},
+            ),
+            dbc.Toast(
+                "",
+                id="dataset-generator-info-alert",
+                header="Dataset save",
+                icon="success",
+                is_open=False,
+                duration=2000,
+                style={"position": "fixed", "top": 8,
+                       "right": 8, "width": 480},
+            ),
+        ]),
         html.H2(children='Dataset Generator'),
         html.Hr(),
         dbc.Row([
@@ -119,24 +150,10 @@ def _create_layout(app, dest_folder: 'Path', function_UIs: dict):
         html.Hr(),
         dbc.Button("Prepare", id='prepare-dataset',
                    color="warning", block=True),
-        dbc.Alert(
-            "",
-            id="dataset-prepare-info-alert",
-            color="info",
-            is_open=False,
-            duration=2000,
-        ),
         dbc.Button("Inpsect", id='inspect-dataset',
                    color="info", block=True),
         dbc.Button("Save", id='save-dataset',
                    color="success", block=True),
-        dbc.Alert(
-            "",
-            id="dataset-generator-info-alert",
-            color="info",
-            is_open=False,
-            duration=2000,
-        ),
         html.Hr(),
         dbc.Progress(
             id='create-dataset-progress', value=_PROGRESS,
@@ -204,6 +221,7 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
 
     @app.callback(
         [Output('dataset-prepare-info-alert', 'is_open'),
+         Output('dataset-prepare-info-alert', 'icon'),
          Output('dataset-prepare-info-alert', 'children')],
         [Input('prepare-dataset', 'n_clicks')],
         [State("functions", "value")]
@@ -215,21 +233,23 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
             try:
                 fun_kwargs = function_UIs[selected_function].to_dict()
             except KeyError:
-                return True, "Impossible to get function parameters..."
+                return True, "danger", "Impossible to get function parameters..."
             if selected_function and fun_kwargs:
                 generator.clean()
                 for day in generator.prepare(
                     selected_function, fun_kwargs
                 ):
                     _PROGRESS = day
-                return True, "Done"
+                return True, "success", "Done"
             else:
-                return True, "Nothing to do..."
+                return True, "warning", "Nothing to do..."
         else:
-            return False, "No message from prepare dataset..."
+            return False, "primary", "No message from prepare dataset..."
 
     @app.callback(
-        Output('inspect-output', 'children'),
+        [Output('inspect-output', 'children'),
+         Output('dataset-inspect-info-alert', 'is_open'),
+         Output('dataset-inspect-info-alert', 'children')],
         [Input('inspect-dataset', 'n_clicks')]
     )
     def inspect_dataset(n_clicks):
@@ -256,8 +276,8 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
                 dcc.Graph(figure=px.scatter(
                     df, y='Filename', color="Filename",
                     title="Files during days")),
-            ]
-        return ""
+            ], True, "Inspection donw. Result plots are ready!"
+        return "", False, ""
 
     @app.callback(
         [Output('dataset-generator-info-alert', 'is_open'),
@@ -270,7 +290,7 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
             _PROGRESS = 0
             for day in generator.save():
                 _PROGRESS = day
-            return True, "Done"
+            return True, "Done! Dataset saved in the output folder..."
         else:
             return False, "No message from save dataset..."
 

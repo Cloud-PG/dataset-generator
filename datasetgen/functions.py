@@ -185,3 +185,56 @@ class RecencyFocusedDataset(GenFunction):
 
         for num, elm in enumerate(all_requests):
             yield elm, float(num / len(all_requests)) * 100.
+
+
+class SizeFocusedDataset(GenFunction):
+
+    def __init__(self, num_files: int,
+                 min_file_size: int, max_file_size: int,
+                 noise_min_file_size: int, noise_max_file_size: int,
+                 perc_noise: float, perc_files_x_day: float,
+                 size_generator_function: str):
+        super().__init__()
+        self._num_files: int = num_files
+        self._min_file_size: int = min_file_size
+        self._max_file_size: int = max_file_size
+        self._noise_min_file_size: int = noise_min_file_size
+        self._noise_max_file_size: int = noise_max_file_size
+        self._perc_noise: float = perc_noise
+        self._perc_files_x_day: float = perc_files_x_day
+        self._size_generator_function: str = size_generator_function
+
+        num_noise_files = int((num_files / 100.) * self._perc_noise)
+        num_normal_files = num_files - num_noise_files
+
+        self._files = {
+            **gen_random_files(
+                num_normal_files, min_file_size, max_file_size,
+                size_generator_function,
+            ),
+            **gen_random_files(
+                num_noise_files, noise_min_file_size, noise_max_file_size,
+                size_generator_function,
+                start_from=num_normal_files
+            )
+        }
+
+    def __repr__(self):
+        return "Size Focused Dataset"
+
+    def gen_day_elements(self, max_num: int = -1):
+        all_requests = []
+        file_perc_x_day = self._perc_files_x_day / 100.
+
+        while len(all_requests) < max_num:
+            for cur_file, file_info in self._files.items():
+                if random.random() <= file_perc_x_day:
+                    if len(all_requests) == max_num:
+                        break
+                    all_requests.append({
+                        'Filename': cur_file,
+                        **file_info,
+                    })
+
+        for num, elm in enumerate(all_requests):
+            yield elm, float(num / len(all_requests)) * 100.
