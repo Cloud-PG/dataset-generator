@@ -159,7 +159,7 @@ class RecencyFocusedDataset(GenFunction):
         file_perc_x_day = self._perc_files_x_day / 100.
         perc_noise = self._perc_noise / 100.
         all_file_names = list(self._files.keys())
-        max_num_req = random.randint(2, max_num)
+        max_num_req = int(max_num / (len(self._files) * file_perc_x_day))
 
         while len(all_requests) < max_num:
             for cur_file, file_info in self._files.items():
