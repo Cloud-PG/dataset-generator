@@ -66,6 +66,17 @@ class RandomGenerator(GenFunction):
 
     def __init__(self, num_files: int, min_file_size: int, max_file_size: int,
                  size_generator_function: str):
+        """Initialize the random function parameters.
+
+        :param num_files: total number of files
+        :type num_files: int
+        :param min_file_size: minumum size of the files
+        :type min_file_size: int
+        :param max_file_size: maximum size of the files
+        :type max_file_size: int
+        :param size_generator_function: name of the size generator function
+        :type size_generator_function: str
+        """
         super().__init__()
         self._num_files: int = num_files
         self._min_file_size: int = min_file_size
