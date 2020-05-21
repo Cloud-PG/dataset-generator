@@ -6,9 +6,10 @@ verify_ssl = true
 [dev-packages]
 pylama = "*"
 autopep8 = "*"
-v = {editable = true,version = "*"}
 sphinx = "*"
 sphinx-autoapi = "*"
+sphinx-material = "*"
+v = {editable = true,version = "*"}
 
 [packages]
 pandas = "*"
