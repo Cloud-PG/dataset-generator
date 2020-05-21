@@ -144,11 +144,20 @@ class Generator(object):
 
     @seed.setter
     def seed(self, value: int):
+        """Change seed value
+
+        :param value: new seed value
+        :type value: int
+        """
         assert isinstance(value, int), "ERROR: value in not an integer"
         self._seed = value
         self.__update_seeds()
 
     def __update_seeds(self):
+        """Initialize the random generator seeds.
+        
+        Internal Python random generator seed and NumPy random seed.
+        """
         random.seed(self._seed)
         np.random.seed(self._seed)
 
@@ -168,6 +177,11 @@ class Generator(object):
 
     @num_req_x_day.setter
     def num_req_x_day(self, value: int):
+        """Set the number of requests per day.
+
+        :param value: number of requests
+        :type value: int
+        """
         assert isinstance(
             value, int), "ERROR: num req x day needs an integer value"
         self._num_req_x_day = value
@@ -182,6 +196,11 @@ class Generator(object):
 
     @num_days.setter
     def num_days(self, value: int):
+        """Set the number of days to generate.
+
+        :param value: number of days
+        :type value: int
+        """
         assert isinstance(
             value, int), "ERROR: num days needs an integer value"
         self._num_days = value
@@ -192,6 +211,12 @@ class Generator(object):
 
     @dest_folder.setter
     def dest_folder(self, dest_folder: 'PurePath' = Path("./dataset")):
+        """Change the destination folder
+
+        :param dest_folder: path of destination folder, defaults to Path("./dataset")
+        :type dest_folder: PurPath, optional
+        :raises Exception: When folder is not a PurePath object
+        """
         if isinstance(dest_folder, Path):
             self._dest_folder = dest_folder
         else:
@@ -199,6 +224,8 @@ class Generator(object):
                 "ERROR: destination folder is not a PurePath object...")
 
     def clean(self):
+        """Delete all day dataframes.
+        """
         del self._days[:]
 
     def prepare(self, function_name: str, kwargs: dict, max_buf_len: int = 1024):
