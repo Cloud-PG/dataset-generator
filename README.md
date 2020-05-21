@@ -44,6 +44,7 @@ python main.py --config configs/HighFreqDataset.json
         }
     }
 }
+```
 
 **NOTE**: the `function_name` have to be a valid `GenFunction` derived class and
 the kwargs are the input passed to the `__init__` function.
