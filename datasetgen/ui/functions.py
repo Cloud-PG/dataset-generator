@@ -14,12 +14,18 @@ class FunctionUI(object):
         self._app = app
 
     def elements(self):
+        """Returns the HTML elemets of the UI."""
         raise NotImplementedError
 
     def callbacks(self):
+        """Returns the elemet callbacks of the UI."""
         raise NotImplementedError
 
     def to_dict(self):
+        """Export the UI parameters as a dict.
+
+        This method is required to call the generator functions
+        """
         raise NotImplementedError
 
     @property
@@ -143,6 +149,8 @@ class RandomGenerator(FunctionUI):
 
 
 class HighFrequencyDataset(FunctionUI):
+
+    """UI for HighFrequencyDataset generator."""
 
     def __init__(self, app: 'dash.dash.Dash'):
         super().__init__(app)
@@ -398,6 +406,8 @@ class HighFrequencyDataset(FunctionUI):
 
 class RecencyFocusedDataset(FunctionUI):
 
+    """UI for RecencyFocusedDataset generator."""
+
     def __init__(self, app: 'dash.dash.Dash'):
         super().__init__(app)
         self._num_files: int = 100
@@ -588,6 +598,8 @@ class RecencyFocusedDataset(FunctionUI):
 
 
 class SizeFocusedDataset(FunctionUI):
+
+    """UI for SizeFocusedDataset generator."""
 
     def __init__(self, app: 'dash.dash.Dash'):
         super().__init__(app)

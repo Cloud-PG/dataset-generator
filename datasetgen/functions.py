@@ -1,6 +1,7 @@
 import random
 
 from numpy import random as np_random
+from typing import Generator
 
 from .utils import gen_fake_cpu_work, gen_random_files
 
@@ -17,6 +18,16 @@ class GenFunction(object):
 
     @day_idx.setter
     def day_idx(self, value: int):
+        """Set the index of the current day.
+
+        Usually set by the Generator object to indicate 
+        the current day sequence.
+
+        :param value: current day index
+        :type value: int
+        :return: self
+        :rtype: GenFunction
+        """
         self._day_idx = value
         return self
 
@@ -26,10 +37,24 @@ class GenFunction(object):
 
     @num_req_x_day.setter
     def num_req_x_day(self, value: int):
+        """Set the number of requests per day.
+
+        :param value: number of requests
+        :type value: int
+        :return: self
+        :rtype: GenFunction
+        """
         self._num_req_x_day = value
         return self
 
-    def gen_day_elements(self, max_num: int = -1):
+    def gen_day_elements(self, max_num: int = -1) -> Generator[int, None, None]:
+        """Generates all the day's entries.
+
+        :param max_num: maximum number of requests, defaults to -1
+        :type max_num: int, optional
+        :yield: the percentage of work done
+        :rtype: Generator[int, None, None]
+        """
         raise NotImplementedError
 
     @property
@@ -54,7 +79,14 @@ class RandomGenerator(GenFunction):
     def __repr__(self):
         return "Random Generator"
 
-    def gen_day_elements(self, max_num: int = -1):
+    def gen_day_elements(self, max_num: int = -1) -> Generator[int, None, None]:
+        """Generates all the day's entries.
+
+        :param max_num: maximum number of requests, defaults to -1
+        :type max_num: int, optional
+        :yield: the percentage of work done
+        :rtype: Generator[int, None, None]
+        """
         filenames: list = list(self._files.keys())
         for _ in range(max_num):
             cur_file = random.choice(filenames)
@@ -67,10 +99,31 @@ class RandomGenerator(GenFunction):
 
 class HighFrequencyDataset(GenFunction):
 
+    """Dataset to test the frequency aspect."""
+
     def __init__(self, num_files: int, min_file_size: int, max_file_size: int,
                  lambda_less_req_files: float, lambda_more_req_files: float,
                  perc_more_req_files: float, perc_files_x_day: float,
                  size_generator_function: str):
+        """Initialize the frequency function parameters.
+
+        :param num_files: total number of files
+        :type num_files: int
+        :param min_file_size: minumum size of the files
+        :type min_file_size: int
+        :param max_file_size: maximum size of the files
+        :type max_file_size: int
+        :param lambda_less_req_files: Poisson distribution lambda for less requested files
+        :type lambda_less_req_files: float
+        :param lambda_more_req_files: Poisson distribution lambda for more requested files
+        :type lambda_more_req_files: float
+        :param perc_more_req_files: percentage of more requested files
+        :type perc_more_req_files: float
+        :param perc_files_x_day: percentage of files per day (selected files)
+        :type perc_files_x_day: float
+        :param size_generator_function: name of the size generator function
+        :type size_generator_function: str
+        """
         super().__init__()
         self._num_files: int = num_files
         self._min_file_size: int = min_file_size
@@ -101,7 +154,14 @@ class HighFrequencyDataset(GenFunction):
     def __repr__(self):
         return "High Frequency Dataset"
 
-    def gen_day_elements(self, max_num: int = -1):
+    def gen_day_elements(self, max_num: int = -1) -> Generator[int, None, None]:
+        """Generates all the day's entries.
+
+        :param max_num: maximum number of requests, defaults to -1
+        :type max_num: int, optional
+        :yield: the percentage of work done
+        :rtype: Generator[int, None, None]
+        """
         more_req_files_freq = np_random.poisson(
             lam=self._lambda_more_req_files, size=self._num_more_req_files
         )
@@ -135,9 +195,25 @@ class HighFrequencyDataset(GenFunction):
 
 class RecencyFocusedDataset(GenFunction):
 
+    """Dataset to test the recency aspect."""
+
     def __init__(self, num_files: int, min_file_size: int, max_file_size: int,
                  perc_noise: float, perc_files_x_day: float,
                  size_generator_function: str):
+        """Initialize the recency function parameters.
+
+        :param num_files: total number of files
+        :type num_files: int
+        :param min_file_size: minumum size of the files
+        :type min_file_size: int
+        :param max_file_size: maximum size of the files
+        :type max_file_size: int
+        :type perc_noise: float
+        :param perc_files_x_day: percentage of files per day (selected files)
+        :type perc_files_x_day: float
+        :param size_generator_function: name of the size generator function
+        :type size_generator_function: str
+        """
         super().__init__()
         self._num_files: int = num_files
         self._min_file_size: int = min_file_size
@@ -154,7 +230,14 @@ class RecencyFocusedDataset(GenFunction):
     def __repr__(self):
         return "Recency Focused Dataset"
 
-    def gen_day_elements(self, max_num: int = -1):
+    def gen_day_elements(self, max_num: int = -1) -> Generator[int, None, None]:
+        """Generates all the day's entries.
+
+        :param max_num: maximum number of requests, defaults to -1
+        :type max_num: int, optional
+        :yield: the percentage of work done
+        :rtype: Generator[int, None, None]
+        """
         all_requests = []
         file_perc_x_day = self._perc_files_x_day / 100.
         perc_noise = self._perc_noise / 100.
@@ -200,11 +283,31 @@ class RecencyFocusedDataset(GenFunction):
 
 class SizeFocusedDataset(GenFunction):
 
-    def __init__(self, num_files: int,
-                 min_file_size: int, max_file_size: int,
+    """Dataset to test the different distribution of file sizes."""
+
+    def __init__(self, num_files: int, min_file_size: int, max_file_size: int,
                  noise_min_file_size: int, noise_max_file_size: int,
                  perc_noise: float, perc_files_x_day: float,
                  size_generator_function: str):
+        """Initialize the size function parameters.
+
+        :param num_files: total number of files
+        :type num_files: int
+        :param min_file_size: minumum size of the files
+        :type min_file_size: int
+        :param max_file_size: maximum size of the files
+        :type max_file_size: int
+        :param noise_min_file_size: minimum size of the noise files
+        :type noise_min_file_size: int
+        :param noise_max_file_size: maximum size of the noise files
+        :type noise_max_file_size: int
+        :param perc_noise: percentage of noise files
+        :type perc_noise: float
+        :param perc_files_x_day: percentage of files per day (selected files)
+        :type perc_files_x_day: float
+        :param size_generator_function: name of the size generator function
+        :type size_generator_function: str
+        """
         super().__init__()
         self._num_files: int = num_files
         self._min_file_size: int = min_file_size
@@ -233,7 +336,14 @@ class SizeFocusedDataset(GenFunction):
     def __repr__(self):
         return "Size Focused Dataset"
 
-    def gen_day_elements(self, max_num: int = -1):
+    def gen_day_elements(self, max_num: int = -1) -> Generator[int, None, None]:
+        """Generates all the day's entries.
+
+        :param max_num: maximum number of requests, defaults to -1
+        :type max_num: int, optional
+        :yield: the percentage of work done
+        :rtype: Generator[int, None, None]
+        """
         all_requests = []
         file_perc_x_day = self._perc_files_x_day / 100.
 

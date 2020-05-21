@@ -1,11 +1,10 @@
 import datetime
 import importlib
-import json
 import random
 import shutil
 import time
 from pathlib import Path, PurePath
-from typing import List
+from typing import List, Tuple, Generator
 
 import numpy as np
 import pandas as pd
@@ -17,6 +16,11 @@ _DEFAULT_SEED = 42
 
 
 def _make_empty_df() -> 'pd.DataFrame':
+    """Generates an empy Dataframe with che columns indicated in COLUMNS dict.
+
+    :return: a new DataFrame
+    :rtype: pd.DataFrame
+    """
     df = pd.DataFrame(index=None)
 
     for column, type_ in COLUMNS.items():
@@ -28,6 +32,11 @@ def _make_empty_df() -> 'pd.DataFrame':
 class Day(object):
 
     def __init__(self, date: 'datetime.date'):
+        """Initialize current day basic information.
+
+        :param date: The current date of the Day object
+        :type date: datetime.date
+        """
         self._date = date
         self._df = _make_empty_df()
 
@@ -39,10 +48,37 @@ class Day(object):
         return self._df
 
     def reset_index(self):
+        """Reset the dataframe index inplace.
+
+        :return: self
+        :rtype: Day
+        """
         self._df.reset_index(drop=True, inplace=True)
         return self
 
     def bulk_append(self, rows: List[dict]):
+        """Insert a bunch of rows into the day's dataframe.
+
+        For each row it sets these default value:
+            - reqDay = int(time.mktime(self._date.timetuple()))
+            - JobSuccess = True
+            - SiteName = 0
+            - DataType = 0
+            - FileType = 0
+
+        Also, if there is no information about the job this function generates
+        a random fake information on cpu work using `gen_fake_cpu_work`:
+            - NumCPU
+            - WrapWC
+            - WrapCPU
+            - CPUTime
+            - IOTime
+
+        :param rows: List of rows
+        :type rows: List[dict]
+        :return: self
+        :rtype: Day
+        """
         cur_req_time = int(time.mktime(self._date.timetuple()))
         for row in rows:
             row['reqDay'] = cur_req_time
@@ -76,6 +112,28 @@ class Day(object):
         return self
 
     def append(self, row: dict):
+        """Insert a single row into the day's dataframe.
+
+        It sets these default value:
+            - reqDay = int(time.mktime(self._date.timetuple()))
+            - JobSuccess = True
+            - SiteName = 0
+            - DataType = 0
+            - FileType = 0
+
+        If there is no information about the job this function generates
+        a random fake information on cpu work using `gen_fake_cpu_work`:
+            - NumCPU
+            - WrapWC
+            - WrapCPU
+            - CPUTime
+            - IOTime
+
+        :param row: the current row's columns
+        :type row: dict
+        :return: self
+        :rtype: Day
+        """
         row['reqDay'] = int(time.mktime(self._date.timetuple()))
         row['JobSuccess'] = True
         row['SiteName'] = 0
@@ -108,12 +166,21 @@ class Day(object):
         return self
 
     def save(self, dest_folder: 'PurePath' = Path(".")):
+        """Export the current day dataframe in a zipped csv format.
+
+        :param dest_folder: the destination directory, defaults to Path(".")
+        :type dest_folder: PurePath, optional
+        :return: self
+        :rtype: Day
+        """
         file_path = dest_folder.joinpath(f"dataset_{self._date}.csv.gz")
         self._df.to_csv(file_path, index=False)
         return self
 
 
 class Generator(object):
+
+    """The main generatore object that creates datasets."""
 
     def __init__(self,
                  config: dict = {},
@@ -123,6 +190,21 @@ class Generator(object):
                  seed: int = _DEFAULT_SEED,
                  dest_folder: 'PurePath' = Path("."),
                  ):
+        """Initialize the generator.
+
+        :param config: A dictionary with the configuration to use, defaults to {}
+        :type config: dict, optional
+        :param num_days: number of days to generate, defaults to -1
+        :type num_days: int, optional
+        :param num_req_x_day: number of requests per day, defaults to -1
+        :type num_req_x_day: int, optional
+        :param start_date: the starting date of the generator data, defaults to datetime.date(2020, 1, 1)
+        :type start_date: datetime, optional
+        :param seed: the random generator seed, defaults to _DEFAULT_SEED
+        :type seed: int, optional
+        :param dest_folder: the folder where to store the dataset, defaults to Path(".")
+        :type dest_folder: PurePath, optional
+        """
         self._start_date = start_date
         self._days = []
         self._seed = seed
@@ -155,20 +237,63 @@ class Generator(object):
 
     def __update_seeds(self):
         """Initialize the random generator seeds.
-        
+
         Internal Python random generator seed and NumPy random seed.
         """
         random.seed(self._seed)
         np.random.seed(self._seed)
 
     @property
-    def df(self):
+    def df(self) -> 'pd.DataFrame':
+        """Returns a new dataframes that contains all the days' dataframes.
+
+        :return: the concatenated dataframe
+        :rtype: pd.DataFrame
+        """
         all_df = pd.concat([day.df for day in self._days])
         all_df['Date'] = pd.to_datetime(all_df.reqDay, unit='s')
         return all_df
 
     @property
-    def days(self):
+    def df_stats(self) -> Tuple['pd.DataFrame']:
+        """Returns the concat days' dataframes and some useful stats
+
+        :return: a tuple with several DataFrames
+        :rtype: Tuple[pd.DataFrame]
+        """
+        df = self.df
+        file_frequencies = df.Filename.value_counts().reset_index()
+        file_frequencies.rename(
+            columns={'Filename': "# requests", 'index': "Filename"},
+            inplace=True
+        )
+        num_files = df.groupby('reqDay').Filename.nunique()
+        num_files = num_files.reset_index()
+        num_files['day'] = pd.to_datetime(num_files.reqDay, unit="s")
+        num_files.rename(
+            columns={'Filename': "numFiles"},
+            inplace=True
+        )
+        num_req = df.groupby('reqDay').size()
+        num_req = num_req.reset_index()
+        num_req.rename(
+            columns={0: 'numReq'},
+            inplace=True
+        )
+        num_req['day'] = pd.to_datetime(num_req.reqDay, unit="s")
+
+        file_sizes = df[['Filename', 'Size']].copy()
+        file_sizes.drop_duplicates("Filename", inplace=True)
+
+        return df, file_frequencies, file_sizes, num_files, num_req
+
+    @property
+    def days(self) -> List['pd.DataFrame']:
+        """Returns a list of days' DataFrames.
+
+        :return: a list with days' DataFrames
+        :rtype: List[pd.DataFrame]
+        """
         return self._days
 
     @property
@@ -187,11 +312,11 @@ class Generator(object):
         self._num_req_x_day = value
 
     @property
-    def num_days(self):
+    def num_days(self) -> int:
         return self._num_days
 
     @property
-    def tot_num_requests(self):
+    def tot_num_requests(self) -> int:
         return self._num_days * self._num_req_x_day
 
     @num_days.setter
@@ -206,7 +331,7 @@ class Generator(object):
         self._num_days = value
 
     @property
-    def dest_folder(self):
+    def dest_folder(self) -> PurePath:
         return self._dest_folder
 
     @dest_folder.setter
@@ -228,7 +353,21 @@ class Generator(object):
         """
         del self._days[:]
 
-    def prepare(self, function_name: str, kwargs: dict, max_buf_len: int = 1024):
+    def prepare(self, function_name: str, kwargs: dict,
+                max_buf_len: int = 1024) -> Generator[int, None, None]:
+        """Prepare the dataset.
+
+        This method recall the function generators.
+
+        :param function_name: The function to use during the preparation
+        :type function_name: str
+        :param kwargs: arguments of generator function
+        :type kwargs: dict
+        :param max_buf_len: size of row buffer, defaults to 1024
+        :type max_buf_len: int, optional
+        :yield: status percentage of the preparation
+        :rtype: int
+        """
         if function_name not in dir(functions):
             importlib.reload(functions)
 
@@ -282,6 +421,7 @@ class Generator(object):
         yield 100
 
     def save(self):
+        """Exports all days' DataFrames in dest_folder."""
         if self._dest_folder.exists():
             shutil.rmtree(self._dest_folder)
         Path.mkdir(self._dest_folder, parents=True)

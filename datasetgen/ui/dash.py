@@ -20,6 +20,17 @@ _DEFAULT_SEED = 42
 
 
 def _create_layout(app, dest_folder: 'Path', function_UIs: dict):
+    """Prepares the UI layout.
+
+    :param app: the current Dash application
+    :type app: dash.Dash
+    :param dest_folder: the destination folder for the datasets
+    :type dest_folder: PurePath
+    :param function_UIs: dataset generator UIs
+    :type function_UIs: dict
+    :return: the updated Dash application
+    :rtype: dash.Dash
+    """
 
     app.layout = html.Div(children=[
         dcc.Interval(id='progress-interval', n_intervals=0, interval=750),
@@ -168,6 +179,22 @@ def _create_layout(app, dest_folder: 'Path', function_UIs: dict):
 
 
 def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
+    """Function to prepare the UI callbacks.
+    
+    In this function are called also all the personalized UI callbacks present
+    in the function generator UIs.
+
+    :param app: the current Dash application
+    :type app: dash.Dash
+    :param generator: the generator object
+    :type generator: Generator
+    :param dest_folder: the destination folder for the datasets
+    :type dest_folder: PurePath
+    :param function_UIs: the dataset generator UIs
+    :type function_UIs: dict
+    :return: the Dash app with the updated callbacks
+    :rtype: dash.Dash
+    """
 
     for elm in function_UIs.values():
         elm.callbacks()
@@ -256,27 +283,8 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
     )
     def inspect_dataset(n_clicks):
         if n_clicks:
-            df = generator.df
-            # TODO: move dataframe operation on generator
-            file_frequencies = df.Filename.value_counts().reset_index()
-            file_frequencies.rename(
-                columns={'Filename': "# requests", 'index': "Filename"},
-                inplace=True
-            )
-            num_files = df.groupby('reqDay').Filename.nunique()
-            num_files = num_files.reset_index()
-            num_files['day'] = pd.to_datetime(num_files.reqDay, unit="s")
-            num_files.rename(
-                columns={'Filename': "numFiles"},
-                inplace=True
-            )
-            num_req = df.groupby('reqDay').size()
-            num_req = num_req.reset_index()
-            num_req.rename(
-                columns={0: 'numReq'},
-                inplace=True
-            )
-            num_req['day'] = pd.to_datetime(num_req.reqDay, unit="s")
+            (df, file_frequencies, file_sizes,
+             num_files, num_req) = generator.df_stats
 
             daily_stats = go.Figure(data=[
                 go.Bar(name='Files', x=num_files.day,
@@ -286,8 +294,6 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
             ])
             daily_stats.update_layout(title="# files and requests x day")
 
-            file_sizes = df[['Filename', 'Size']].copy()
-            file_sizes.drop_duplicates("Filename", inplace=True)
             return [
                 dcc.Graph(figure=daily_stats),
                 dcc.Graph(figure=px.bar(file_frequencies, x="Filename",
@@ -337,6 +343,13 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
 
 
 def start_app(debug: bool = True, dest_folder: 'Path' = Path(__file__).parent):
+    """Start the generator UI app.
+
+    :param debug: if start in debug mode or not, defaults to True
+    :type debug: bool, optional
+    :param dest_folder: the destination folder for the dataset generator, defaults to Path(__file__).parent
+    :type dest_folder: PurePath, optional
+    """
     generator = Generator(
         dest_folder=dest_folder,
     )
