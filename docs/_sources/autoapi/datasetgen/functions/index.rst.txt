@@ -1,0 +1,191 @@
+:mod:`datasetgen.functions`
+===========================
+
+.. py:module:: datasetgen.functions
+
+
+Module Contents
+---------------
+
+
+.. py:class:: GenFunction
+
+   Bases: :class:`object`
+
+   .. method:: day_idx(self)
+      :property:
+
+
+
+   .. method:: num_req_x_day(self)
+      :property:
+
+
+
+   .. method:: gen_day_elements(self, max_num: int = -1)
+      :abstractmethod:
+
+
+      Generates all the day's entries.
+
+      :param max_num: maximum number of requests, defaults to -1
+      :type max_num: int, optional
+      :yield: the percentage of work done
+      :rtype: Generator[int, None, None]
+
+
+   .. method:: name(self)
+      :property:
+
+
+
+
+.. py:class:: RandomGenerator(num_files: int, min_file_size: int, max_file_size: int, size_generator_function: str)
+
+   Bases: :class:`datasetgen.functions.GenFunction`
+
+   Initialize the random function parameters.
+
+   :param num_files: total number of files
+   :type num_files: int
+   :param min_file_size: minumum size of the files
+   :type min_file_size: int
+   :param max_file_size: maximum size of the files
+   :type max_file_size: int
+   :param size_generator_function: name of the size generator function
+   :type size_generator_function: str
+
+   .. method:: __repr__(self)
+
+
+
+   .. method:: gen_day_elements(self, max_num: int = -1)
+
+
+      Generates all the day's entries.
+
+      :param max_num: maximum number of requests, defaults to -1
+      :type max_num: int, optional
+      :yield: the percentage of work done
+      :rtype: Generator[int, None, None]
+
+
+
+.. py:class:: HighFrequencyDataset(num_files: int, min_file_size: int, max_file_size: int, lambda_less_req_files: float, lambda_more_req_files: float, perc_more_req_files: float, perc_files_x_day: float, size_generator_function: str)
+
+   Bases: :class:`datasetgen.functions.GenFunction`
+
+   Dataset to test the frequency aspect.
+
+   Initialize the frequency function parameters.
+
+   :param num_files: total number of files
+   :type num_files: int
+   :param min_file_size: minumum size of the files
+   :type min_file_size: int
+   :param max_file_size: maximum size of the files
+   :type max_file_size: int
+   :param lambda_less_req_files: Poisson distribution lambda for less requested files
+   :type lambda_less_req_files: float
+   :param lambda_more_req_files: Poisson distribution lambda for more requested files
+   :type lambda_more_req_files: float
+   :param perc_more_req_files: percentage of more requested files
+   :type perc_more_req_files: float
+   :param perc_files_x_day: percentage of files per day (selected files)
+   :type perc_files_x_day: float
+   :param size_generator_function: name of the size generator function
+   :type size_generator_function: str
+
+   .. method:: __repr__(self)
+
+
+
+   .. method:: gen_day_elements(self, max_num: int = -1)
+
+
+      Generates all the day's entries.
+
+      :param max_num: maximum number of requests, defaults to -1
+      :type max_num: int, optional
+      :yield: the percentage of work done
+      :rtype: Generator[int, None, None]
+
+
+
+.. py:class:: RecencyFocusedDataset(num_files: int, min_file_size: int, max_file_size: int, perc_noise: float, perc_files_x_day: float, size_generator_function: str)
+
+   Bases: :class:`datasetgen.functions.GenFunction`
+
+   Dataset to test the recency aspect.
+
+   Initialize the recency function parameters.
+
+   :param num_files: total number of files
+   :type num_files: int
+   :param min_file_size: minumum size of the files
+   :type min_file_size: int
+   :param max_file_size: maximum size of the files
+   :type max_file_size: int
+   :type perc_noise: float
+   :param perc_files_x_day: percentage of files per day (selected files)
+   :type perc_files_x_day: float
+   :param size_generator_function: name of the size generator function
+   :type size_generator_function: str
+
+   .. method:: __repr__(self)
+
+
+
+   .. method:: gen_day_elements(self, max_num: int = -1)
+
+
+      Generates all the day's entries.
+
+      :param max_num: maximum number of requests, defaults to -1
+      :type max_num: int, optional
+      :yield: the percentage of work done
+      :rtype: Generator[int, None, None]
+
+
+
+.. py:class:: SizeFocusedDataset(num_files: int, min_file_size: int, max_file_size: int, noise_min_file_size: int, noise_max_file_size: int, perc_noise: float, perc_files_x_day: float, size_generator_function: str)
+
+   Bases: :class:`datasetgen.functions.GenFunction`
+
+   Dataset to test the different distribution of file sizes.
+
+   Initialize the size function parameters.
+
+   :param num_files: total number of files
+   :type num_files: int
+   :param min_file_size: minumum size of the files
+   :type min_file_size: int
+   :param max_file_size: maximum size of the files
+   :type max_file_size: int
+   :param noise_min_file_size: minimum size of the noise files
+   :type noise_min_file_size: int
+   :param noise_max_file_size: maximum size of the noise files
+   :type noise_max_file_size: int
+   :param perc_noise: percentage of noise files
+   :type perc_noise: float
+   :param perc_files_x_day: percentage of files per day (selected files)
+   :type perc_files_x_day: float
+   :param size_generator_function: name of the size generator function
+   :type size_generator_function: str
+
+   .. method:: __repr__(self)
+
+
+
+   .. method:: gen_day_elements(self, max_num: int = -1)
+
+
+      Generates all the day's entries.
+
+      :param max_num: maximum number of requests, defaults to -1
+      :type max_num: int, optional
+      :yield: the percentage of work done
+      :rtype: Generator[int, None, None]
+
+
+

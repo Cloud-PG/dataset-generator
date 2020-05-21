@@ -1,0 +1,535 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../../../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../../../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../../../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../../../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../../../_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>datasetgen.generator &#8212; cache dataset generator 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/material.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=blue data-md-color-accent=light-blue>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#autoapi/datasetgen/generator/index" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../../../index.html" title="cache dataset generator 1.0.0 documentation"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">Cache Dataset Generator</span>
+          <span class="md-header-nav__topic"> datasetgen.generator </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../../../search.html" method="GET" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://cloud-pg.github.io/dataset-generator/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Dataset Generator
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+  
+  <script src="../../../_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "../../../"versions.json"",
+        target_loc = "../../../../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../../../index.html" class="md-tabs__link">cache dataset generator 1.0.0 documentation</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../../../index.html" title="cache dataset generator 1.0.0 documentation" class="md-nav__button md-logo">
+      
+        <img src="../../../_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../../../index.html"
+       title="cache dataset generator 1.0.0 documentation">Cache Dataset Generator</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://cloud-pg.github.io/dataset-generator/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Dataset Generator
+  </div>
+</a>
+    </div>
+  
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#autoapi-datasetgen-generator-index--page-root" class="md-nav__link"><code class="xref py py-mod docutils literal notranslate"><span class="pre">datasetgen.generator</span></code></a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#module-contents" class="md-nav__link">Module Contents</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#datasetgen.generator._DEFAULT_SEED" class="md-nav__link">_DEFAULT_SEED</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../../_sources/autoapi/datasetgen/generator/index.rst.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  
+<span id="datasetgen-generator"></span><h1 id="autoapi-datasetgen-generator-index--page-root"><a class="reference internal" href="#autoapi-datasetgen-generator-index--page-root" title="datasetgen.generator"><code class="xref py py-mod docutils literal notranslate"><span class="pre">datasetgen.generator</span></code></a><a class="headerlink" href="#autoapi-datasetgen-generator-index--page-root" title="Permalink to this headline">¶</a></h1>
+
+<h2 id="module-contents">Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<dl class="py data">
+<dt id="datasetgen.generator._DEFAULT_SEED">
+<code class="sig-prename descclassname">datasetgen.generator.</code><code class="sig-name descname">_DEFAULT_SEED</code><em class="property"> = 42</em><a class="reference internal" href="../../../_modules/datasetgen/generator.html#_DEFAULT_SEED"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator._DEFAULT_SEED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py function">
+<dt id="datasetgen.generator._make_empty_df">
+<code class="sig-prename descclassname">datasetgen.generator.</code><code class="sig-name descname">_make_empty_df</code><span class="sig-paren">(</span><span class="sig-paren">)</span> → ’pd.DataFrame’<a class="reference internal" href="../../../_modules/datasetgen/generator.html#_make_empty_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator._make_empty_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates an empy Dataframe with che columns indicated in COLUMNS dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a new DataFrame</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py class">
+<dt id="datasetgen.generator.Day">
+<em class="property">class </em><code class="sig-prename descclassname">datasetgen.generator.</code><code class="sig-name descname">Day</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">date</span><span class="p">:</span> <span class="n">datetime.date</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Day"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Day" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Initialize current day basic information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>date</strong> (<em>datetime.date</em>) – The current date of the Day object</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="datasetgen.generator.Day.__repr__">
+<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Day.__repr__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Day.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt id="datasetgen.generator.Day.df">
+<em class="property">property </em><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Day.df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Day.df" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt id="datasetgen.generator.Day.reset_index">
+<code class="sig-name descname">reset_index</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Day.reset_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Day.reset_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the dataframe index inplace.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#datasetgen.generator.Day" title="datasetgen.generator.Day">Day</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="datasetgen.generator.Day.bulk_append">
+<code class="sig-name descname">bulk_append</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">rows</span><span class="p">:</span> <span class="n">List<span class="p">[</span>dict<span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Day.bulk_append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Day.bulk_append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert a bunch of rows into the day’s dataframe.</p>
+<dl class="simple">
+<dt>For each row it sets these default value:</dt><dd><ul class="simple">
+<li><p>reqDay = int(time.mktime(self._date.timetuple()))</p></li>
+<li><p>JobSuccess = True</p></li>
+<li><p>SiteName = 0</p></li>
+<li><p>DataType = 0</p></li>
+<li><p>FileType = 0</p></li>
+</ul>
+</dd>
+</dl>
+<p>Also, if there is no information about the job this function generates
+a random fake information on cpu work using <cite>gen_fake_cpu_work</cite>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>NumCPU</p></li>
+<li><p>WrapWC</p></li>
+<li><p>WrapCPU</p></li>
+<li><p>CPUTime</p></li>
+<li><p>IOTime</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rows</strong> (<em>List</em><em>[</em><em>dict</em><em>]</em>) – List of rows</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#datasetgen.generator.Day" title="datasetgen.generator.Day">Day</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="datasetgen.generator.Day.append">
+<code class="sig-name descname">append</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">row</span><span class="p">:</span> <span class="n">dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Day.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Day.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert a single row into the day’s dataframe.</p>
+<dl class="simple">
+<dt>It sets these default value:</dt><dd><ul class="simple">
+<li><p>reqDay = int(time.mktime(self._date.timetuple()))</p></li>
+<li><p>JobSuccess = True</p></li>
+<li><p>SiteName = 0</p></li>
+<li><p>DataType = 0</p></li>
+<li><p>FileType = 0</p></li>
+</ul>
+</dd>
+</dl>
+<p>If there is no information about the job this function generates
+a random fake information on cpu work using <cite>gen_fake_cpu_work</cite>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>NumCPU</p></li>
+<li><p>WrapWC</p></li>
+<li><p>WrapCPU</p></li>
+<li><p>CPUTime</p></li>
+<li><p>IOTime</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>row</strong> (<em>dict</em>) – the current row’s columns</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#datasetgen.generator.Day" title="datasetgen.generator.Day">Day</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="datasetgen.generator.Day.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">dest_folder</span><span class="p">:</span> <span class="n">PurePath</span> <span class="o">=</span> <span class="default_value">Path('.')</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Day.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Day.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export the current day dataframe in a zipped csv format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dest_folder</strong> (<em>PurePath</em><em>, </em><em>optional</em>) – the destination directory, defaults to Path(“.”)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#datasetgen.generator.Day" title="datasetgen.generator.Day">Day</a></p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="datasetgen.generator.Generator">
+<em class="property">class </em><code class="sig-prename descclassname">datasetgen.generator.</code><code class="sig-name descname">Generator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span><span class="p">:</span> <span class="n">dict</span> <span class="o">=</span> <span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">num_days</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">num_req_x_day</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">start_date</span><span class="p">:</span> <span class="n">datetime.date</span> <span class="o">=</span> <span class="default_value">datetime.date(2020, 1, 1)</span></em>, <em class="sig-param"><span class="n">seed</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">_DEFAULT_SEED</span></em>, <em class="sig-param"><span class="n">dest_folder</span><span class="p">:</span> <span class="n">PurePath</span> <span class="o">=</span> <span class="default_value">Path('.')</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Generator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The main generatore object that creates datasets.</p>
+<p>Initialize the generator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>dict</em><em>, </em><em>optional</em>) – A dictionary with the configuration to use, defaults to {}</p></li>
+<li><p><strong>num_days</strong> (<em>int</em><em>, </em><em>optional</em>) – number of days to generate, defaults to -1</p></li>
+<li><p><strong>num_req_x_day</strong> (<em>int</em><em>, </em><em>optional</em>) – number of requests per day, defaults to -1</p></li>
+<li><p><strong>start_date</strong> (<em>datetime</em><em>, </em><em>optional</em>) – the starting date of the generator data, defaults to datetime.date(2020, 1, 1)</p></li>
+<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>optional</em>) – the random generator seed, defaults to _DEFAULT_SEED</p></li>
+<li><p><strong>dest_folder</strong> (<em>PurePath</em><em>, </em><em>optional</em>) – the folder where to store the dataset, defaults to Path(“.”)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="datasetgen.generator.Generator.seed">
+<em class="property">property </em><code class="sig-name descname">seed</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Generator.seed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Generator.seed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt id="datasetgen.generator.Generator.__update_seeds">
+<code class="sig-name descname">__update_seeds</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Generator.__update_seeds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Generator.__update_seeds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the random generator seeds.</p>
+<p>Internal Python random generator seed and NumPy random seed.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="datasetgen.generator.Generator.df">
+<em class="property">property </em><code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Generator.df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Generator.df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a new dataframes that contains all the days’ dataframes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the concatenated dataframe</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="datasetgen.generator.Generator.df_stats">
+<em class="property">property </em><code class="sig-name descname">df_stats</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Generator.df_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Generator.df_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the concat days’ dataframes and some useful stats</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a tuple with several DataFrames</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Tuple[pd.DataFrame]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="datasetgen.generator.Generator.days">
+<em class="property">property </em><code class="sig-name descname">days</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Generator.days"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Generator.days" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of days’ DataFrames.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a list with days’ DataFrames</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>List[pd.DataFrame]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="datasetgen.generator.Generator.num_req_x_day">
+<em class="property">property </em><code class="sig-name descname">num_req_x_day</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Generator.num_req_x_day"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Generator.num_req_x_day" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt id="datasetgen.generator.Generator.num_days">
+<em class="property">property </em><code class="sig-name descname">num_days</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Generator.num_days"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Generator.num_days" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt id="datasetgen.generator.Generator.tot_num_requests">
+<em class="property">property </em><code class="sig-name descname">tot_num_requests</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Generator.tot_num_requests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Generator.tot_num_requests" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt id="datasetgen.generator.Generator.dest_folder">
+<em class="property">property </em><code class="sig-name descname">dest_folder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Generator.dest_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Generator.dest_folder" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt id="datasetgen.generator.Generator.clean">
+<code class="sig-name descname">clean</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Generator.clean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Generator.clean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete all day dataframes.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="datasetgen.generator.Generator.prepare">
+<code class="sig-name descname">prepare</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">function_name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">kwargs</span><span class="p">:</span> <span class="n">dict</span></em>, <em class="sig-param"><span class="n">max_buf_len</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1024</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Generator.prepare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Generator.prepare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare the dataset.</p>
+<p>This method recall the function generators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>function_name</strong> (<em>str</em>) – The function to use during the preparation</p></li>
+<li><p><strong>kwargs</strong> (<em>dict</em>) – arguments of generator function</p></li>
+<li><p><strong>max_buf_len</strong> (<em>int</em><em>, </em><em>optional</em>) – size of row buffer, defaults to 1024</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yield</dt>
+<dd class="field-even"><p>status percentage of the preparation</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="datasetgen.generator.Generator.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Generator.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Generator.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports all days’ DataFrames in dest_folder.</p>
+</dd></dl>
+</dd></dl>
+
+
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2020, MircoT.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 3.0.3.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../../../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

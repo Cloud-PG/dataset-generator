@@ -1,0 +1,31 @@
+:mod:`datasetgen.ui`
+====================
+
+.. py:module:: datasetgen.ui
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   dash/index.rst
+   functions/index.rst
+   utils/index.rst
+
+
+Package Contents
+----------------
+
+
+.. function:: start_app(debug: bool = True, dest_folder: Path = Path(__file__).parent)
+
+   Start the generator UI app.
+
+   :param debug: if start in debug mode or not, defaults to True
+   :type debug: bool, optional
+   :param dest_folder: the destination folder for the dataset generator, defaults to Path(__file__).parent
+   :type dest_folder: PurePath, optional
+
+

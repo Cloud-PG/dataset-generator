@@ -1,0 +1,26 @@
+:mod:`datasetgen`
+=================
+
+.. py:module:: datasetgen
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   ui/index.rst
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   functions/index.rst
+   generator/index.rst
+   utils/index.rst
+
+

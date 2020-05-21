@@ -1,0 +1,229 @@
+:mod:`datasetgen.generator`
+===========================
+
+.. py:module:: datasetgen.generator
+
+
+Module Contents
+---------------
+
+
+.. data:: _DEFAULT_SEED
+   :annotation: = 42
+
+   
+
+.. function:: _make_empty_df() -> 'pd.DataFrame'
+
+   Generates an empy Dataframe with che columns indicated in COLUMNS dict.
+
+   :return: a new DataFrame
+   :rtype: pd.DataFrame
+
+
+.. py:class:: Day(date: datetime.date)
+
+   Bases: :class:`object`
+
+   Initialize current day basic information.
+
+   :param date: The current date of the Day object
+   :type date: datetime.date
+
+   .. method:: __repr__(self)
+
+
+
+   .. method:: df(self)
+      :property:
+
+
+
+   .. method:: reset_index(self)
+
+
+      Reset the dataframe index inplace.
+
+      :return: self
+      :rtype: Day
+
+
+   .. method:: bulk_append(self, rows: List[dict])
+
+
+      Insert a bunch of rows into the day's dataframe.
+
+      For each row it sets these default value:
+          - reqDay = int(time.mktime(self._date.timetuple()))
+          - JobSuccess = True
+          - SiteName = 0
+          - DataType = 0
+          - FileType = 0
+
+      Also, if there is no information about the job this function generates
+      a random fake information on cpu work using `gen_fake_cpu_work`:
+          - NumCPU
+          - WrapWC
+          - WrapCPU
+          - CPUTime
+          - IOTime
+
+      :param rows: List of rows
+      :type rows: List[dict]
+      :return: self
+      :rtype: Day
+
+
+   .. method:: append(self, row: dict)
+
+
+      Insert a single row into the day's dataframe.
+
+      It sets these default value:
+          - reqDay = int(time.mktime(self._date.timetuple()))
+          - JobSuccess = True
+          - SiteName = 0
+          - DataType = 0
+          - FileType = 0
+
+      If there is no information about the job this function generates
+      a random fake information on cpu work using `gen_fake_cpu_work`:
+          - NumCPU
+          - WrapWC
+          - WrapCPU
+          - CPUTime
+          - IOTime
+
+      :param row: the current row's columns
+      :type row: dict
+      :return: self
+      :rtype: Day
+
+
+   .. method:: save(self, dest_folder: PurePath = Path('.'))
+
+
+      Export the current day dataframe in a zipped csv format.
+
+      :param dest_folder: the destination directory, defaults to Path(".")
+      :type dest_folder: PurePath, optional
+      :return: self
+      :rtype: Day
+
+
+
+.. py:class:: Generator(config: dict = {}, num_days: int = -1, num_req_x_day: int = -1, start_date: datetime.date = datetime.date(2020, 1, 1), seed: int = _DEFAULT_SEED, dest_folder: PurePath = Path('.'))
+
+   Bases: :class:`object`
+
+   The main generatore object that creates datasets.
+
+   Initialize the generator.
+
+   :param config: A dictionary with the configuration to use, defaults to {}
+   :type config: dict, optional
+   :param num_days: number of days to generate, defaults to -1
+   :type num_days: int, optional
+   :param num_req_x_day: number of requests per day, defaults to -1
+   :type num_req_x_day: int, optional
+   :param start_date: the starting date of the generator data, defaults to datetime.date(2020, 1, 1)
+   :type start_date: datetime, optional
+   :param seed: the random generator seed, defaults to _DEFAULT_SEED
+   :type seed: int, optional
+   :param dest_folder: the folder where to store the dataset, defaults to Path(".")
+   :type dest_folder: PurePath, optional
+
+   .. method:: seed(self)
+      :property:
+
+
+
+   .. method:: __update_seeds(self)
+
+
+      Initialize the random generator seeds.
+
+      Internal Python random generator seed and NumPy random seed.
+
+
+   .. method:: df(self)
+      :property:
+
+
+      Returns a new dataframes that contains all the days' dataframes.
+
+      :return: the concatenated dataframe
+      :rtype: pd.DataFrame
+
+
+   .. method:: df_stats(self)
+      :property:
+
+
+      Returns the concat days' dataframes and some useful stats
+
+      :return: a tuple with several DataFrames
+      :rtype: Tuple[pd.DataFrame]
+
+
+   .. method:: days(self)
+      :property:
+
+
+      Returns a list of days' DataFrames.
+
+      :return: a list with days' DataFrames
+      :rtype: List[pd.DataFrame]
+
+
+   .. method:: num_req_x_day(self)
+      :property:
+
+
+
+   .. method:: num_days(self)
+      :property:
+
+
+
+   .. method:: tot_num_requests(self)
+      :property:
+
+
+
+   .. method:: dest_folder(self)
+      :property:
+
+
+
+   .. method:: clean(self)
+
+
+      Delete all day dataframes.
+              
+
+
+   .. method:: prepare(self, function_name: str, kwargs: dict, max_buf_len: int = 1024)
+
+
+      Prepare the dataset.
+
+      This method recall the function generators.
+
+      :param function_name: The function to use during the preparation
+      :type function_name: str
+      :param kwargs: arguments of generator function
+      :type kwargs: dict
+      :param max_buf_len: size of row buffer, defaults to 1024
+      :type max_buf_len: int, optional
+      :yield: status percentage of the preparation
+      :rtype: int
+
+
+   .. method:: save(self)
+
+
+      Exports all days' DataFrames in dest_folder.
+
+
+

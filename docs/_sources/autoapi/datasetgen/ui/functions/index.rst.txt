@@ -1,0 +1,138 @@
+:mod:`datasetgen.ui.functions`
+==============================
+
+.. py:module:: datasetgen.ui.functions
+
+
+Module Contents
+---------------
+
+
+.. py:class:: FunctionUI(app: dash.dash.Dash)
+
+   Bases: :class:`object`
+
+   .. method:: elements(self)
+      :abstractmethod:
+
+
+      Returns the HTML elemets of the UI.
+
+
+   .. method:: callbacks(self)
+      :abstractmethod:
+
+
+      Returns the elemet callbacks of the UI.
+
+
+   .. method:: to_dict(self)
+      :abstractmethod:
+
+
+      Export the UI parameters as a dict.
+
+      This method is required to call the generator functions
+
+
+   .. method:: name(self)
+      :property:
+
+
+
+   .. method:: name_id(self)
+      :property:
+
+
+
+
+.. py:class:: RandomGenerator(app: dash.dash.Dash)
+
+   Bases: :class:`datasetgen.ui.functions.FunctionUI`
+
+   .. method:: __repr__(self)
+
+
+
+   .. method:: to_dict(self)
+
+
+
+   .. method:: callbacks(self)
+
+
+
+   .. method:: elements(self)
+
+
+
+
+.. py:class:: HighFrequencyDataset(app: dash.dash.Dash)
+
+   Bases: :class:`datasetgen.ui.functions.FunctionUI`
+
+   UI for HighFrequencyDataset generator.
+
+   .. method:: __repr__(self)
+
+
+
+   .. method:: to_dict(self)
+
+
+
+   .. method:: callbacks(self)
+
+
+
+   .. method:: elements(self)
+
+
+
+
+.. py:class:: RecencyFocusedDataset(app: dash.dash.Dash)
+
+   Bases: :class:`datasetgen.ui.functions.FunctionUI`
+
+   UI for RecencyFocusedDataset generator.
+
+   .. method:: __repr__(self)
+
+
+
+   .. method:: to_dict(self)
+
+
+
+   .. method:: callbacks(self)
+
+
+
+   .. method:: elements(self)
+
+
+
+
+.. py:class:: SizeFocusedDataset(app: dash.dash.Dash)
+
+   Bases: :class:`datasetgen.ui.functions.FunctionUI`
+
+   UI for SizeFocusedDataset generator.
+
+   .. method:: __repr__(self)
+
+
+
+   .. method:: to_dict(self)
+
+
+
+   .. method:: callbacks(self)
+
+
+
+   .. method:: elements(self)
+
+
+
+

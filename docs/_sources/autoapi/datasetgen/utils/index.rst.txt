@@ -1,0 +1,42 @@
+:mod:`datasetgen.utils`
+=======================
+
+.. py:module:: datasetgen.utils
+
+
+Module Contents
+---------------
+
+
+.. data:: _FILE_SIZE_STEP
+   :annotation: = 100
+
+   
+
+.. data:: _SIZE_PROB_DISTRIBUTION
+   
+
+   
+
+.. function:: str2bool(v)
+
+
+.. function:: gen_random_sizes(num_files: int, min_file_size: int, max_file_size: int) -> list
+
+
+.. function:: gen_in_range_random_sizes(num_files: int, min_file_size: int, max_file_size: int) -> list
+
+
+.. function:: gen_random_files(num_files: int, min_file_size: int, max_file_size: int, size_generator_function: str = 'gen_in_range_random_sizes', start_from: int = 0) -> dict
+
+   Generates a dict with random files with a random size.
+
+
+.. function:: gen_fake_cpu_work(num_cpus: int = 1)
+
+
+.. data:: COLUMNS
+   
+
+   
+

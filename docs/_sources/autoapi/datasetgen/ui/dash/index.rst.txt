@@ -1,0 +1,68 @@
+:mod:`datasetgen.ui.dash`
+=========================
+
+.. py:module:: datasetgen.ui.dash
+
+
+Module Contents
+---------------
+
+
+.. data:: _EXTERNAL_STYLESHEETS
+   :annotation: = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+
+   
+
+.. data:: _PROGRESS
+   :annotation: = 100
+
+   
+
+.. data:: _DEFAULT_SEED
+   :annotation: = 42
+
+   
+
+.. function:: _create_layout(app, dest_folder: Path, function_UIs: dict)
+
+   Prepares the UI layout.
+
+   :param app: the current Dash application
+   :type app: dash.Dash
+   :param dest_folder: the destination folder for the datasets
+   :type dest_folder: PurePath
+   :param function_UIs: dataset generator UIs
+   :type function_UIs: dict
+   :return: the updated Dash application
+   :rtype: dash.Dash
+
+
+.. function:: _prepare_callbacks(app, generator, dest_folder, function_UIs: dict)
+
+   Function to prepare the UI callbacks.
+
+   In this function are called also all the personalized UI callbacks present
+   in the function generator UIs.
+
+   :param app: the current Dash application
+   :type app: dash.Dash
+   :param generator: the generator object
+   :type generator: Generator
+   :param dest_folder: the destination folder for the datasets
+   :type dest_folder: PurePath
+   :param function_UIs: the dataset generator UIs
+   :type function_UIs: dict
+   :return: the Dash app with the updated callbacks
+   :rtype: dash.Dash
+
+
+.. function:: start_app(debug: bool = True, dest_folder: Path = Path(__file__).parent)
+
+   Start the generator UI app.
+
+   :param debug: if start in debug mode or not, defaults to True
+   :type debug: bool, optional
+   :param dest_folder: the destination folder for the dataset generator, defaults to Path(__file__).parent
+   :type dest_folder: PurePath, optional
+
+
