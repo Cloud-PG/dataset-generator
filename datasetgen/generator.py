@@ -107,6 +107,7 @@ class Day(object):
             key: [elm[key] for elm in rows]
             for key in keys
         })
+        new_df.Size *= 1024**2
 
         self._df = self._df.append(new_df, ignore_index=True)
         return self
@@ -139,6 +140,7 @@ class Day(object):
         row['SiteName'] = 0
         row['DataType'] = 0
         row['FileType'] = 0
+        row['Size'] = row['Size'] * 1024**2  # Convert to bytes
 
         for key in row:
             if key not in [
