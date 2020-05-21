@@ -187,7 +187,7 @@ class HighFrequencyDataset(GenFunction):
                 for _ in range(more_req_files_freq[idx]):
                     all_requests.append({
                         'Filename': cur_file,
-                        **file_info,
+                        **file_info.copy(),
                     })
 
         for idx, (cur_file, file_info) in enumerate(self._less_req_files.items()):
@@ -195,7 +195,7 @@ class HighFrequencyDataset(GenFunction):
                 for _ in range(less_req_files_freq[idx]):
                     all_requests.append({
                         'Filename': cur_file,
-                        **file_info,
+                        **file_info.copy(),
                     })
 
         random.shuffle(all_requests)
@@ -278,12 +278,12 @@ class RecencyFocusedDataset(GenFunction):
                         noise_file_info = self._files[noise_file]
                         all_requests.append({
                             'Filename': noise_file,
-                            **noise_file_info,
+                            **noise_file_info.copy(),
                         })
                     else:
                         all_requests.append({
                             'Filename': cur_file,
-                            **file_info,
+                            **file_info.copy(),
                         })
                     if len(all_requests) == max_num:
                         break
@@ -371,7 +371,7 @@ class SizeFocusedDataset(GenFunction):
                     break
                 all_requests.append({
                     'Filename': cur_file,
-                    **self._files[cur_file],
+                    **self._files[cur_file].copy(),
                 })
 
         for num, elm in enumerate(all_requests):
