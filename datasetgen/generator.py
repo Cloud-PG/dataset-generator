@@ -5,6 +5,7 @@ import random
 import shutil
 import time
 from pathlib import Path, PurePath
+from typing import List
 
 import numpy as np
 import pandas as pd
@@ -39,6 +40,39 @@ class Day(object):
 
     def reset_index(self):
         self._df.reset_index(drop=True, inplace=True)
+        return self
+
+    def bulk_append(self, rows: List[dict]):
+        cur_req_time = int(time.mktime(self._date.timetuple()))
+        for row in rows:
+            row['reqDay'] = cur_req_time
+            row['JobSuccess'] = True
+            row['SiteName'] = 0
+            row['DataType'] = 0
+            row['FileType'] = 0
+            for key in row:
+                if key not in [
+                    'NumCPU',
+                    'WrapWC',
+                    'WrapCPU',
+                    'CPUTime',
+                    'IOTime',
+                ]:
+                    num_cpus, wall_time, cpu_time, single_cpu_time, io_time = gen_fake_cpu_work()
+                    row['NumCPU'] = num_cpus
+                    row['WrapWC'] = wall_time
+                    row['WrapCPU'] = cpu_time
+                    row['CPUTime'] = single_cpu_time
+                    row['IOTime'] = io_time
+                    break
+
+        keys = list(rows[0].keys())
+        new_df = pd.DataFrame(data={
+            key: [elm[key] for elm in rows]
+            for key in keys
+        })
+
+        self._df = self._df.append(new_df, ignore_index=True)
         return self
 
     def append(self, row: dict):
@@ -167,7 +201,7 @@ class Generator(object):
     def clean(self):
         del self._days[:]
 
-    def prepare(self, function_name: str, kwargs: dict):
+    def prepare(self, function_name: str, kwargs: dict, max_buf_len: int = 1024):
         if function_name not in dir(functions):
             importlib.reload(functions)
 
@@ -177,16 +211,39 @@ class Generator(object):
         delta = datetime.timedelta(days=1)
         cur_date = self._start_date
 
+        buffer = []
+
         for n_day in range(self._num_days):
             cur_day = Day(cur_date)
             cur_gen_obj.day_idx = n_day
 
-            for n_req, (elm, percentage) in enumerate(cur_gen_obj.gen_day_elements(self._num_req_x_day)):
-                cur_day.append(elm)
+            for n_req, (elm, percentage) in enumerate(
+                cur_gen_obj.gen_day_elements(self._num_req_x_day)
+            ):
+                # Old method with low performaces
+                # cur_day.append(elm)
+
+                buffer.append(elm)
+
+                if len(buffer) == 100:
+                    cur_day.bulk_append(buffer)
+                    del buffer[:]
+                    buffer = []
+
                 if percentage is None:
-                    yield int(float((n_day * self._num_req_x_day + n_req) / self.tot_num_requests) * 100.)
+                    yield int(
+                        float(
+                            (n_day * self._num_req_x_day + n_req) /
+                            self.tot_num_requests
+                        ) * 100.)
                 else:
-                    yield int((percentage + (n_day * 100.)) / (self._num_days * 100.) * 100.)
+                    yield int(
+                        (percentage + (n_day * 100.)) /
+                        (self._num_days * 100.) * 100.
+                    )
+            else:
+                if len(buffer) != 0:
+                    cur_day.bulk_append(buffer)
 
             cur_day.reset_index()
 
