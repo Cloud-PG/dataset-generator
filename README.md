@@ -15,6 +15,8 @@ Start the UI and open [localhost](http://127.0.0.1:8050/):
 python main.py --ui
 ```
 
+> **NOTE**: the UI starts in debug mode as default
+
 You can use also the script mode passing a valid configuration as in the following
 example:
 
@@ -46,5 +48,5 @@ python main.py --config configs/HighFreqDataset.json
 }
 ```
 
-**NOTE**: the `function_name` have to be a valid `GenFunction` derived class and
+> **NOTE**: the `function_name` have to be a valid `GenFunction` derived class and
 the kwargs are the input passed to the `__init__` function.
