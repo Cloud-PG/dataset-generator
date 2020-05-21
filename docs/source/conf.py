@@ -179,7 +179,7 @@ epub_exclude_files = ['search.html']
 
 # -- Extension configuration -------------------------------------------------
 
-autoapi_dirs = ['../datasetgen']
+autoapi_dirs = ['../../datasetgen']
 autoapi_python_class_content = 'both'
 
 # Material theme options (see theme.conf for more information)
