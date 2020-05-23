@@ -9,6 +9,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output, State
+from plotly.graph_objs import Layout
 
 from ..generator import Generator
 from . import functions
@@ -180,7 +181,7 @@ def _create_layout(app, dest_folder: 'Path', function_UIs: dict):
 
 def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
     """Function to prepare the UI callbacks.
-    
+
     In this function are called also all the personalized UI callbacks present
     in the function generator UIs.
 
@@ -286,33 +287,54 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
             (df, file_frequencies, file_sizes,
              num_files, num_req) = generator.df_stats
 
+            layout = Layout(
+                paper_bgcolor='rgb(255,255,255)',
+                plot_bgcolor='rgb(255,255,255)',
+                yaxis={'gridcolor': 'black'},
+                xaxis={'gridcolor': 'black'},
+            )
+
             daily_stats = go.Figure(data=[
                 go.Bar(name='Files', x=num_files.day,
                        y=num_files.numFiles),
                 go.Bar(name='Requests', x=num_req.day,
                        y=num_req.numReq),
-            ])
+            ], layout=layout)
             daily_stats.update_layout(title="# files and requests x day")
+
+            file_freq_fig = px.bar(
+                file_frequencies, x="Filename",
+                y="# requests", title="File requests"
+            )
+            file_size_fig = px.bar(
+                file_sizes, x="Filename",
+                y="Size", title="File sizes"
+            )
+            size_hist_fig = px.histogram(
+                df, x="Size", title="Size distribution"
+            )
+            size_scatter_fit = px.scatter(
+                df, y='Size', size='Size',
+                title="Sizes during days"
+            )
+            filename_scatter_fig = px.scatter(
+                df, y='Filename', color="Filename",
+                title="Files during days"
+            )
+
+            file_freq_fig.update_layout(layout)
+            file_size_fig.update_layout(layout)
+            size_hist_fig.update_layout(layout)
+            size_scatter_fit.update_layout(layout)
+            filename_scatter_fig.update_layout(layout)
 
             return [
                 dcc.Graph(figure=daily_stats),
-                dcc.Graph(figure=px.bar(file_frequencies, x="Filename",
-                                        y="# requests", title="File requests"
-                                        )),
-                dcc.Graph(figure=px.bar(file_sizes, x="Filename",
-                                        y="Size", title="File sizes"
-                                        )),
-                dcc.Graph(figure=px.histogram(
-                    df, x="Size", title="Size distribution"
-                )),
-                dcc.Graph(figure=px.scatter(
-                    df, y='Size', size='Size',
-                    title="Sizes during days")
-                ),
-                dcc.Graph(figure=px.scatter(
-                    df, y='Filename', color="Filename",
-                    title="Files during days"
-                )),
+                dcc.Graph(figure=file_freq_fig),
+                dcc.Graph(figure=file_size_fig),
+                dcc.Graph(figure=size_hist_fig),
+                dcc.Graph(figure=size_scatter_fit),
+                dcc.Graph(figure=filename_scatter_fig),
             ], True, "Inspection donw. Result plots are ready!"
         return "", False, ""
 
