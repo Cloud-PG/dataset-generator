@@ -253,40 +253,39 @@ class RecencyFocusedDataset(GenFunction):
         file_perc_x_day = self._perc_files_x_day / 100.
         perc_noise = self._perc_noise / 100.
 
-        min_num_req = int(max_num / (len(self._files) * file_perc_x_day))
-        max_num_req = int(min_num_req * 2)
-        min_num_req = int(min_num_req / 2)
-
-        assert min_num_req != 0, "Check file perc. x day, is too high respect the # of files"
-
         filenames = list(self._files.keys())
         num_visible_files = int(len(self._files) * file_perc_x_day)
+        # 10% of files are noise
+        num_noise_files = int(num_visible_files * 0.1)
 
         random.shuffle(filenames)
         filenames = filenames[:num_visible_files]
+        noise_files = filenames[:num_noise_files]
+        normal_files = filenames[num_noise_files:]
 
         while len(all_requests) < max_num:
-            random.shuffle(filenames)
-            for cur_file in filenames:
-                if len(all_requests) == max_num:
-                    break
-                num_requests = random.randint(min_num_req, max_num_req)
-                file_info = self._files[cur_file]
-                for _ in range(num_requests):
-                    if random.random() <= perc_noise:
-                        noise_file = random.choice(filenames)
-                        noise_file_info = self._files[noise_file]
-                        all_requests.append({
-                            'Filename': noise_file,
-                            **noise_file_info.copy(),
-                        })
-                    else:
-                        all_requests.append({
-                            'Filename': cur_file,
-                            **file_info.copy(),
-                        })
+            random.shuffle(noise_files)
+            random.shuffle(normal_files)
+            if random.random() <= perc_noise:
+                for cur_file in noise_files:
                     if len(all_requests) == max_num:
                         break
+                    noise_file_info = self._files[cur_file]
+                    all_requests.append({
+                        'Filename': cur_file,
+                        **noise_file_info.copy(),
+                    })
+            else:
+                for cur_file in normal_files:
+                    if len(all_requests) == max_num:
+                        break
+                    file_info = self._files[cur_file]
+                    all_requests.append({
+                        'Filename': cur_file,
+                        **file_info.copy(),
+                    })
+            if len(all_requests) == max_num:
+                break
 
         for num, elm in enumerate(all_requests):
             yield elm, float(num / len(all_requests)) * 100.
