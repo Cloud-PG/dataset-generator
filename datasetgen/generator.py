@@ -264,11 +264,20 @@ class Generator(object):
         :rtype: Tuple[pd.DataFrame]
         """
         df = self.df
+
         file_frequencies = df.Filename.value_counts().reset_index()
         file_frequencies.rename(
             columns={'Filename': "# requests", 'index': "Filename"},
             inplace=True
         )
+
+        all_day_file_size = df.drop_duplicates(
+            'Filename').groupby('reqDay').Size.sum()
+        all_day_file_size = all_day_file_size.reset_index()
+        all_day_file_size['day'] = pd.to_datetime(
+            all_day_file_size.reqDay, unit="s")
+        all_day_file_size.Size /= 1024**2
+
         num_files = df.groupby('reqDay').Filename.nunique()
         num_files = num_files.reset_index()
         num_files['day'] = pd.to_datetime(num_files.reqDay, unit="s")
@@ -276,6 +285,7 @@ class Generator(object):
             columns={'Filename': "numFiles"},
             inplace=True
         )
+
         num_req = df.groupby('reqDay').size()
         num_req = num_req.reset_index()
         num_req.rename(
@@ -286,8 +296,10 @@ class Generator(object):
 
         file_sizes = df[['Filename', 'Size']].copy()
         file_sizes.drop_duplicates("Filename", inplace=True)
+        file_sizes.Size /= 1024**2
 
-        return df, file_frequencies, file_sizes, num_files, num_req
+        return (df, file_frequencies, all_day_file_size,
+                file_sizes, num_files, num_req)
 
     @property
     def days(self) -> List['pd.DataFrame']:

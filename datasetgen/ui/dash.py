@@ -82,6 +82,11 @@ def _create_layout(app, dest_folder: 'Path', function_UIs: dict):
                 placeholder="destination folder name",
                 value=dest_folder.name,
             ), width="auto"),
+            dbc.Col(dcc.Upload(
+                dbc.Button('Select folder'),
+                id='select-folder',
+                multiple=True,
+            ), width="auto"),
         ]),
         html.Hr(),
         html.H3(children="Generator Parameters"),
@@ -200,6 +205,16 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
     for elm in function_UIs.values():
         elm.callbacks()
 
+    @app.callback(Output('dest-folder', 'value'),
+                  [Input('select-folder', 'contents')],
+                  [State('select-folder', 'filename'),
+                   State('select-folder', 'last_modified')])
+    def select_folder(list_of_contents, list_of_names, list_of_dates):
+        print(list_of_contents, list_of_names, list_of_dates)
+        if list_of_contents is not None:
+            return dest_folder.name
+        return dest_folder.name
+
     @app.callback(
         [Output("functions", "options"), Output("functions", "value")],
         [Input("reload-functions", "n_clicks")],
@@ -284,7 +299,7 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
     )
     def inspect_dataset(n_clicks):
         if n_clicks:
-            (df, file_frequencies, file_sizes,
+            (df, file_frequencies, all_day_file_size, file_sizes,
              num_files, num_req) = generator.df_stats
 
             layout = Layout(
@@ -302,6 +317,10 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
             ], layout=layout)
             daily_stats.update_layout(title="# files and requests x day")
 
+            day_file_size = px.bar(
+                all_day_file_size, x="day",
+                y="Size", title="Day size"
+            )
             file_freq_fig = px.bar(
                 file_frequencies, x="Filename",
                 y="# requests", title="File requests"
@@ -330,6 +349,7 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
 
             return [
                 dcc.Graph(figure=daily_stats),
+                dcc.Graph(figure=day_file_size),
                 dcc.Graph(figure=file_freq_fig),
                 dcc.Graph(figure=file_size_fig),
                 dcc.Graph(figure=size_hist_fig),
