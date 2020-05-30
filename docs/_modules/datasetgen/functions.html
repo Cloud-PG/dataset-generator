@@ -416,7 +416,7 @@
                 <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">more_req_files_freq</span><span class="p">[</span><span class="n">idx</span><span class="p">]):</span>
                     <span class="n">all_requests</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
                         <span class="s1">'Filename'</span><span class="p">:</span> <span class="n">cur_file</span><span class="p">,</span>
-                        <span class="o">**</span><span class="n">file_info</span><span class="p">,</span>
+                        <span class="o">**</span><span class="n">file_info</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
                     <span class="p">})</span>
 
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">cur_file</span><span class="p">,</span> <span class="n">file_info</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_less_req_files</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
@@ -424,7 +424,7 @@
                 <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">less_req_files_freq</span><span class="p">[</span><span class="n">idx</span><span class="p">]):</span>
                     <span class="n">all_requests</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
                         <span class="s1">'Filename'</span><span class="p">:</span> <span class="n">cur_file</span><span class="p">,</span>
-                        <span class="o">**</span><span class="n">file_info</span><span class="p">,</span>
+                        <span class="o">**</span><span class="n">file_info</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
                     <span class="p">})</span>
 
         <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">all_requests</span><span class="p">)</span>
@@ -438,8 +438,7 @@
     <span class="sd">"""Dataset to test the recency aspect."""</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_files</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">min_file_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_file_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                 <span class="n">perc_noise</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">perc_files_x_day</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                 <span class="n">size_generator_function</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+                 <span class="n">perc_files_x_day</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">size_generator_function</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="sd">"""Initialize the recency function parameters.</span>
 
 <span class="sd">        :param num_files: total number of files</span>
@@ -448,7 +447,6 @@
 <span class="sd">        :type min_file_size: int</span>
 <span class="sd">        :param max_file_size: maximum size of the files</span>
 <span class="sd">        :type max_file_size: int</span>
-<span class="sd">        :type perc_noise: float</span>
 <span class="sd">        :param perc_files_x_day: percentage of files per day (selected files)</span>
 <span class="sd">        :type perc_files_x_day: float</span>
 <span class="sd">        :param size_generator_function: name of the size generator function</span>
@@ -458,7 +456,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_num_files</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">num_files</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_min_file_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">min_file_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_max_file_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">max_file_size</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_perc_noise</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">perc_noise</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_perc_files_x_day</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">perc_files_x_day</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_size_generator_function</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">size_generator_function</span>
 
@@ -480,13 +477,6 @@
 <span class="sd">        """</span>
         <span class="n">all_requests</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">file_perc_x_day</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_perc_files_x_day</span> <span class="o">/</span> <span class="mf">100.</span>
-        <span class="n">perc_noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_perc_noise</span> <span class="o">/</span> <span class="mf">100.</span>
-
-        <span class="n">min_num_req</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">max_num</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">)</span> <span class="o">*</span> <span class="n">file_perc_x_day</span><span class="p">))</span>
-        <span class="n">max_num_req</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">min_num_req</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="n">min_num_req</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">min_num_req</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
-
-        <span class="k">assert</span> <span class="n">min_num_req</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"Check file perc. x day, is too high respect the # of files"</span>
 
         <span class="n">filenames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
         <span class="n">num_visible_files</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">)</span> <span class="o">*</span> <span class="n">file_perc_x_day</span><span class="p">)</span>
@@ -495,27 +485,17 @@
         <span class="n">filenames</span> <span class="o">=</span> <span class="n">filenames</span><span class="p">[:</span><span class="n">num_visible_files</span><span class="p">]</span>
 
         <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_requests</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">max_num</span><span class="p">:</span>
-            <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">filenames</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">cur_file</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
+                <span class="n">file_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">[</span><span class="n">cur_file</span><span class="p">]</span>
+                <span class="n">all_requests</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                    <span class="s1">'Filename'</span><span class="p">:</span> <span class="n">cur_file</span><span class="p">,</span>
+                    <span class="o">**</span><span class="n">file_info</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+                <span class="p">})</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_requests</span><span class="p">)</span> <span class="o">==</span> <span class="n">max_num</span><span class="p">:</span>
                     <span class="k">break</span>
-                <span class="n">num_requests</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">min_num_req</span><span class="p">,</span> <span class="n">max_num_req</span><span class="p">)</span>
-                <span class="n">file_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">[</span><span class="n">cur_file</span><span class="p">]</span>
-                <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_requests</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">perc_noise</span><span class="p">:</span>
-                        <span class="n">noise_file</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">filenames</span><span class="p">)</span>
-                        <span class="n">noise_file_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">[</span><span class="n">noise_file</span><span class="p">]</span>
-                        <span class="n">all_requests</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-                            <span class="s1">'Filename'</span><span class="p">:</span> <span class="n">noise_file</span><span class="p">,</span>
-                            <span class="o">**</span><span class="n">noise_file_info</span><span class="p">,</span>
-                        <span class="p">})</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">all_requests</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-                            <span class="s1">'Filename'</span><span class="p">:</span> <span class="n">cur_file</span><span class="p">,</span>
-                            <span class="o">**</span><span class="n">file_info</span><span class="p">,</span>
-                        <span class="p">})</span>
-                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_requests</span><span class="p">)</span> <span class="o">==</span> <span class="n">max_num</span><span class="p">:</span>
-                        <span class="k">break</span>
+
+            <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
+                <span class="n">filenames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">filenames</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="n">elm</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">all_requests</span><span class="p">):</span>
             <span class="k">yield</span> <span class="n">elm</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">num</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_requests</span><span class="p">))</span> <span class="o">*</span> <span class="mf">100.</span></div></div>
@@ -600,7 +580,7 @@
                     <span class="k">break</span>
                 <span class="n">all_requests</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
                     <span class="s1">'Filename'</span><span class="p">:</span> <span class="n">cur_file</span><span class="p">,</span>
-                    <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">[</span><span class="n">cur_file</span><span class="p">],</span>
+                    <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">[</span><span class="n">cur_file</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
                 <span class="p">})</span>
 
         <span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="n">elm</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">all_requests</span><span class="p">):</span>

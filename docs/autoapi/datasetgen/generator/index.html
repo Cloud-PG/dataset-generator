@@ -260,7 +260,7 @@
 </dd></dl>
 <dl class="py class">
 <dt id="datasetgen.generator.Day">
-<em class="property">class </em><code class="sig-prename descclassname">datasetgen.generator.</code><code class="sig-name descname">Day</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">date</span><span class="p">:</span> <span class="n">datetime.date</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Day"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Day" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">datasetgen.generator.</code><code class="sig-name descname">Day</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">date</span><span class="p">:</span> <span class="n">datetime.date</span></em>, <em class="sig-param"><span class="n">df</span><span class="p">:</span> <span class="n">pd.DataFrame</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Day"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Day" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Initialize current day basic information.</p>
 <dl class="field-list simple">
@@ -486,6 +486,29 @@ a random fake information on cpu work using <cite>gen_fake_cpu_work</cite>:</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="datasetgen.generator.Generator._open_dataset_file">
+<code class="sig-name descname">_open_dataset_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">filename</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Generator._open_dataset_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Generator._open_dataset_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open a single dataset day.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the current day data</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#datasetgen.generator.Day" title="datasetgen.generator.Day">Day</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt id="datasetgen.generator.Generator.open_data">
+<code class="sig-name descname">open_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">folder</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/generator.html#Generator.open_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.generator.Generator.open_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open dataset from a folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>folder</strong> (<em>str</em>) – the dataset folder</p>
 </dd>
 </dl>
 </dd></dl>

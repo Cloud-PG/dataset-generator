@@ -21,7 +21,7 @@ Module Contents
    :rtype: pd.DataFrame
 
 
-.. py:class:: Day(date: datetime.date)
+.. py:class:: Day(date: datetime.date, df: pd.DataFrame = None)
 
    Bases: :class:`object`
 
@@ -218,6 +218,24 @@ Module Contents
       :type max_buf_len: int, optional
       :yield: status percentage of the preparation
       :rtype: int
+
+
+   .. method:: _open_dataset_file(self, filename: str)
+
+
+      Open a single dataset day.
+
+      :return: the current day data
+      :rtype: Day
+
+
+   .. method:: open_data(self, folder: str)
+
+
+      Open dataset from a folder.
+
+      :param folder: the dataset folder
+      :type folder: str
 
 
    .. method:: save(self)

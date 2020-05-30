@@ -260,14 +260,17 @@
 
 <div class="viewcode-block" id="Day"><a class="viewcode-back" href="../../autoapi/datasetgen/generator/index.html#datasetgen.generator.Day">[docs]</a><span class="k">class</span> <span class="nc">Day</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="s1">'datetime.date'</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="s1">'datetime.date'</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="s1">'pd.DataFrame'</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">"""Initialize current day basic information.</span>
 
 <span class="sd">        :param date: The current date of the Day object</span>
 <span class="sd">        :type date: datetime.date</span>
 <span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_date</span> <span class="o">=</span> <span class="n">date</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_df</span> <span class="o">=</span> <span class="n">_make_empty_df</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_df</span> <span class="o">=</span> <span class="n">df</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_df</span> <span class="o">=</span> <span class="n">_make_empty_df</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Day.__repr__"><a class="viewcode-back" href="../../autoapi/datasetgen/generator/index.html#datasetgen.generator.Day.__repr__">[docs]</a>    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_date</span><span class="si">}</span><span class="s2">=&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_df</span><span class="o">.</span><span class="n">to_string</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span></div>
@@ -336,6 +339,7 @@
             <span class="n">key</span><span class="p">:</span> <span class="p">[</span><span class="n">elm</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">elm</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span>
         <span class="p">})</span>
+        <span class="n">new_df</span><span class="o">.</span><span class="n">Size</span> <span class="o">*=</span> <span class="mi">1024</span><span class="o">**</span><span class="mi">2</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_df</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
@@ -368,6 +372,7 @@
         <span class="n">row</span><span class="p">[</span><span class="s1">'SiteName'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">row</span><span class="p">[</span><span class="s1">'DataType'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">row</span><span class="p">[</span><span class="s1">'FileType'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">row</span><span class="p">[</span><span class="s1">'Size'</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">'Size'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1024</span><span class="o">**</span><span class="mi">2</span>  <span class="c1"># Convert to bytes</span>
 
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span>
@@ -491,11 +496,20 @@
 <span class="sd">        :rtype: Tuple[pd.DataFrame]</span>
 <span class="sd">        """</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span>
+
         <span class="n">file_frequencies</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Filename</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
         <span class="n">file_frequencies</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
             <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">'Filename'</span><span class="p">:</span> <span class="s2">"# requests"</span><span class="p">,</span> <span class="s1">'index'</span><span class="p">:</span> <span class="s2">"Filename"</span><span class="p">},</span>
             <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
+
+        <span class="n">all_day_file_size</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span>
+            <span class="s1">'Filename'</span><span class="p">)</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'reqDay'</span><span class="p">)</span><span class="o">.</span><span class="n">Size</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">all_day_file_size</span> <span class="o">=</span> <span class="n">all_day_file_size</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+        <span class="n">all_day_file_size</span><span class="p">[</span><span class="s1">'day'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span>
+            <span class="n">all_day_file_size</span><span class="o">.</span><span class="n">reqDay</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">"s"</span><span class="p">)</span>
+        <span class="n">all_day_file_size</span><span class="o">.</span><span class="n">Size</span> <span class="o">/=</span> <span class="mi">1024</span><span class="o">**</span><span class="mi">2</span>
+
         <span class="n">num_files</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'reqDay'</span><span class="p">)</span><span class="o">.</span><span class="n">Filename</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
         <span class="n">num_files</span> <span class="o">=</span> <span class="n">num_files</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
         <span class="n">num_files</span><span class="p">[</span><span class="s1">'day'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">num_files</span><span class="o">.</span><span class="n">reqDay</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">"s"</span><span class="p">)</span>
@@ -503,6 +517,7 @@
             <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">'Filename'</span><span class="p">:</span> <span class="s2">"numFiles"</span><span class="p">},</span>
             <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
+
         <span class="n">num_req</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'reqDay'</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
         <span class="n">num_req</span> <span class="o">=</span> <span class="n">num_req</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
         <span class="n">num_req</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
@@ -513,8 +528,10 @@
 
         <span class="n">file_sizes</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">'Filename'</span><span class="p">,</span> <span class="s1">'Size'</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">file_sizes</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="s2">"Filename"</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">file_sizes</span><span class="o">.</span><span class="n">Size</span> <span class="o">/=</span> <span class="mi">1024</span><span class="o">**</span><span class="mi">2</span>
 
-        <span class="k">return</span> <span class="n">df</span><span class="p">,</span> <span class="n">file_frequencies</span><span class="p">,</span> <span class="n">file_sizes</span><span class="p">,</span> <span class="n">num_files</span><span class="p">,</span> <span class="n">num_req</span></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">file_frequencies</span><span class="p">,</span> <span class="n">all_day_file_size</span><span class="p">,</span>
+                <span class="n">file_sizes</span><span class="p">,</span> <span class="n">num_files</span><span class="p">,</span> <span class="n">num_req</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
 <div class="viewcode-block" id="Generator.days"><a class="viewcode-back" href="../../autoapi/datasetgen/generator/index.html#datasetgen.generator.Generator.days">[docs]</a>    <span class="k">def</span> <span class="nf">days</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s1">'pd.DataFrame'</span><span class="p">]:</span>
@@ -648,6 +665,34 @@
             <span class="n">cur_date</span> <span class="o">=</span> <span class="n">cur_date</span> <span class="o">+</span> <span class="n">delta</span>
 
         <span class="k">yield</span> <span class="mi">100</span></div>
+
+<div class="viewcode-block" id="Generator._open_dataset_file"><a class="viewcode-back" href="../../autoapi/datasetgen/generator/index.html#datasetgen.generator.Generator._open_dataset_file">[docs]</a>    <span class="k">def</span> <span class="nf">_open_dataset_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="s1">'str'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">'Day'</span><span class="p">:</span>
+        <span class="sd">"""Open a single dataset day.</span>
+
+<span class="sd">        :return: the current day data</span>
+<span class="sd">        :rtype: Day</span>
+<span class="sd">        """</span>
+        <span class="n">cur_date</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">int</span><span class="p">(</span><span class="n">elm</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">elm</span> <span class="ow">in</span> <span class="n">filename</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span>
+                <span class="s2">"_"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span>
+                    <span class="s2">"."</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span>
+                        <span class="s2">"-"</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="n">cur_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="o">*</span><span class="n">cur_date</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">Day</span><span class="p">(</span><span class="n">cur_date</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Generator.open_data"><a class="viewcode-back" href="../../autoapi/datasetgen/generator/index.html#datasetgen.generator.Generator.open_data">[docs]</a>    <span class="k">def</span> <span class="nf">open_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">"""Open dataset from a folder.</span>
+
+<span class="sd">        :param folder: the dataset folder</span>
+<span class="sd">        :type folder: str</span>
+<span class="sd">        """</span>
+        <span class="k">for</span> <span class="n">file_</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">"*.csv*"</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_days</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_open_dataset_file</span><span class="p">(</span><span class="n">file_</span><span class="p">)</span></div>
+            <span class="p">)</span>
 
 <div class="viewcode-block" id="Generator.save"><a class="viewcode-back" href="../../autoapi/datasetgen/generator/index.html#datasetgen.generator.Generator.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">"""Exports all days' DataFrames in dest_folder."""</span>

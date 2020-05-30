@@ -238,6 +238,7 @@
 <span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
 <span class="kn">import</span> <span class="nn">plotly.graph_objects</span> <span class="k">as</span> <span class="nn">go</span>
 <span class="kn">from</span> <span class="nn">dash.dependencies</span> <span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">State</span>
+<span class="kn">from</span> <span class="nn">plotly.graph_objs</span> <span class="kn">import</span> <span class="n">Layout</span>
 
 <span class="kn">from</span> <span class="nn">..generator</span> <span class="kn">import</span> <span class="n">Generator</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">functions</span>
@@ -310,6 +311,21 @@
                 <span class="n">placeholder</span><span class="o">=</span><span class="s2">"destination folder name"</span><span class="p">,</span>
                 <span class="n">value</span><span class="o">=</span><span class="n">dest_folder</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
             <span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="s2">"auto"</span><span class="p">),</span>
+            <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span>
+                    <span class="s1">'Load files'</span><span class="p">,</span>
+                    <span class="nb">id</span><span class="o">=</span><span class="s1">'load-files'</span>
+                <span class="p">),</span>
+                <span class="n">width</span><span class="o">=</span><span class="p">{</span><span class="s1">'size'</span><span class="p">:</span> <span class="s2">"auto"</span><span class="p">}</span>
+            <span class="p">),</span>
+            <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">Spinner</span><span class="p">(</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">H5</span><span class="p">(</span>
+                        <span class="nb">id</span><span class="o">=</span><span class="s1">'dest-folder-load'</span><span class="p">,</span>
+                        <span class="n">children</span><span class="o">=</span><span class="s2">""</span>
+                    <span class="p">)),</span>
+                <span class="n">width</span><span class="o">=</span><span class="p">{</span><span class="s1">'size'</span><span class="p">:</span> <span class="s2">"auto"</span><span class="p">}</span>
+            <span class="p">),</span>
         <span class="p">]),</span>
         <span class="n">html</span><span class="o">.</span><span class="n">Hr</span><span class="p">(),</span>
         <span class="n">html</span><span class="o">.</span><span class="n">H3</span><span class="p">(</span><span class="n">children</span><span class="o">=</span><span class="s2">"Generator Parameters"</span><span class="p">),</span>
@@ -409,7 +425,7 @@
 
 <div class="viewcode-block" id="_prepare_callbacks"><a class="viewcode-back" href="../../../autoapi/datasetgen/ui/dash/index.html#datasetgen.ui.dash._prepare_callbacks">[docs]</a><span class="k">def</span> <span class="nf">_prepare_callbacks</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">generator</span><span class="p">,</span> <span class="n">dest_folder</span><span class="p">,</span> <span class="n">function_UIs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
     <span class="sd">"""Function to prepare the UI callbacks.</span>
-<span class="sd">    </span>
+
 <span class="sd">    In this function are called also all the personalized UI callbacks present</span>
 <span class="sd">    in the function generator UIs.</span>
 
@@ -427,6 +443,15 @@
 
     <span class="k">for</span> <span class="n">elm</span> <span class="ow">in</span> <span class="n">function_UIs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
         <span class="n">elm</span><span class="o">.</span><span class="n">callbacks</span><span class="p">()</span>
+
+    <span class="nd">@app</span><span class="o">.</span><span class="n">callback</span><span class="p">([</span><span class="n">Output</span><span class="p">(</span><span class="s1">'dest-folder'</span><span class="p">,</span> <span class="s1">'value'</span><span class="p">),</span>
+                   <span class="n">Output</span><span class="p">(</span><span class="s1">'dest-folder-load'</span><span class="p">,</span> <span class="s1">'children'</span><span class="p">)],</span>
+                  <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">'load-files'</span><span class="p">,</span> <span class="s1">'n_clicks'</span><span class="p">)],)</span>
+    <span class="k">def</span> <span class="nf">open_folder</span><span class="p">(</span><span class="n">n_clicks</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">n_clicks</span><span class="p">:</span>
+            <span class="n">generator</span><span class="o">.</span><span class="n">open_data</span><span class="p">(</span><span class="n">generator</span><span class="o">.</span><span class="n">dest_folder</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">generator</span><span class="o">.</span><span class="n">dest_folder</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">"All data loaded..."</span>
+        <span class="k">return</span> <span class="n">generator</span><span class="o">.</span><span class="n">dest_folder</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">"No data loaded..."</span>
 
     <span class="nd">@app</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
         <span class="p">[</span><span class="n">Output</span><span class="p">(</span><span class="s2">"functions"</span><span class="p">,</span> <span class="s2">"options"</span><span class="p">),</span> <span class="n">Output</span><span class="p">(</span><span class="s2">"functions"</span><span class="p">,</span> <span class="s2">"value"</span><span class="p">)],</span>
@@ -512,37 +537,63 @@
     <span class="p">)</span>
     <span class="k">def</span> <span class="nf">inspect_dataset</span><span class="p">(</span><span class="n">n_clicks</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">n_clicks</span><span class="p">:</span>
-            <span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">file_frequencies</span><span class="p">,</span> <span class="n">file_sizes</span><span class="p">,</span>
+            <span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">file_frequencies</span><span class="p">,</span> <span class="n">all_day_file_size</span><span class="p">,</span> <span class="n">file_sizes</span><span class="p">,</span>
              <span class="n">num_files</span><span class="p">,</span> <span class="n">num_req</span><span class="p">)</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">df_stats</span>
+
+            <span class="n">layout</span> <span class="o">=</span> <span class="n">Layout</span><span class="p">(</span>
+                <span class="n">paper_bgcolor</span><span class="o">=</span><span class="s1">'rgb(255,255,255)'</span><span class="p">,</span>
+                <span class="n">plot_bgcolor</span><span class="o">=</span><span class="s1">'rgb(255,255,255)'</span><span class="p">,</span>
+                <span class="n">yaxis</span><span class="o">=</span><span class="p">{</span><span class="s1">'gridcolor'</span><span class="p">:</span> <span class="s1">'black'</span><span class="p">},</span>
+                <span class="n">xaxis</span><span class="o">=</span><span class="p">{</span><span class="s1">'gridcolor'</span><span class="p">:</span> <span class="s1">'black'</span><span class="p">},</span>
+            <span class="p">)</span>
 
             <span class="n">daily_stats</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[</span>
                 <span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'Files'</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">num_files</span><span class="o">.</span><span class="n">day</span><span class="p">,</span>
                        <span class="n">y</span><span class="o">=</span><span class="n">num_files</span><span class="o">.</span><span class="n">numFiles</span><span class="p">),</span>
                 <span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'Requests'</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">num_req</span><span class="o">.</span><span class="n">day</span><span class="p">,</span>
                        <span class="n">y</span><span class="o">=</span><span class="n">num_req</span><span class="o">.</span><span class="n">numReq</span><span class="p">),</span>
-            <span class="p">])</span>
+            <span class="p">],</span> <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">)</span>
             <span class="n">daily_stats</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"# files and requests x day"</span><span class="p">)</span>
+
+            <span class="n">day_file_size</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+                <span class="n">all_day_file_size</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">"day"</span><span class="p">,</span>
+                <span class="n">y</span><span class="o">=</span><span class="s2">"Size"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Day size"</span>
+            <span class="p">)</span>
+            <span class="n">file_freq_fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+                <span class="n">file_frequencies</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">"Filename"</span><span class="p">,</span>
+                <span class="n">y</span><span class="o">=</span><span class="s2">"# requests"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"File requests"</span>
+            <span class="p">)</span>
+            <span class="n">file_size_fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+                <span class="n">file_sizes</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">"Filename"</span><span class="p">,</span>
+                <span class="n">y</span><span class="o">=</span><span class="s2">"Size"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"File sizes"</span>
+            <span class="p">)</span>
+            <span class="n">size_hist_fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span>
+                <span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">"Size"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Size distribution"</span>
+            <span class="p">)</span>
+            <span class="n">size_scatter_fit</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                <span class="n">df</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">'Size'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s1">'Size'</span><span class="p">,</span>
+                <span class="n">title</span><span class="o">=</span><span class="s2">"Sizes during days"</span>
+            <span class="p">)</span>
+            <span class="n">filename_scatter_fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                <span class="n">df</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">'Filename'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"Filename"</span><span class="p">,</span>
+                <span class="n">title</span><span class="o">=</span><span class="s2">"Files during days"</span>
+            <span class="p">)</span>
+
+            <span class="n">file_freq_fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+            <span class="n">file_size_fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+            <span class="n">size_hist_fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+            <span class="n">size_scatter_fit</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+            <span class="n">filename_scatter_fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
 
             <span class="k">return</span> <span class="p">[</span>
                 <span class="n">dcc</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">figure</span><span class="o">=</span><span class="n">daily_stats</span><span class="p">),</span>
-                <span class="n">dcc</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">figure</span><span class="o">=</span><span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">file_frequencies</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">"Filename"</span><span class="p">,</span>
-                                        <span class="n">y</span><span class="o">=</span><span class="s2">"# requests"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"File requests"</span>
-                                        <span class="p">)),</span>
-                <span class="n">dcc</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">figure</span><span class="o">=</span><span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">file_sizes</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">"Filename"</span><span class="p">,</span>
-                                        <span class="n">y</span><span class="o">=</span><span class="s2">"Size"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"File sizes"</span>
-                                        <span class="p">)),</span>
-                <span class="n">dcc</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">figure</span><span class="o">=</span><span class="n">px</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span>
-                    <span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">"Size"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Size distribution"</span>
-                <span class="p">)),</span>
-                <span class="n">dcc</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">figure</span><span class="o">=</span><span class="n">px</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-                    <span class="n">df</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">'Size'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s1">'Size'</span><span class="p">,</span>
-                    <span class="n">title</span><span class="o">=</span><span class="s2">"Sizes during days"</span><span class="p">)</span>
-                <span class="p">),</span>
-                <span class="n">dcc</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">figure</span><span class="o">=</span><span class="n">px</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-                    <span class="n">df</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">'Filename'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"Filename"</span><span class="p">,</span>
-                    <span class="n">title</span><span class="o">=</span><span class="s2">"Files during days"</span>
-                <span class="p">)),</span>
-            <span class="p">],</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"Inspection donw. Result plots are ready!"</span>
+                <span class="n">dcc</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">figure</span><span class="o">=</span><span class="n">day_file_size</span><span class="p">),</span>
+                <span class="n">dcc</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">figure</span><span class="o">=</span><span class="n">file_freq_fig</span><span class="p">),</span>
+                <span class="n">dcc</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">figure</span><span class="o">=</span><span class="n">file_size_fig</span><span class="p">),</span>
+                <span class="n">dcc</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">figure</span><span class="o">=</span><span class="n">size_hist_fig</span><span class="p">),</span>
+                <span class="n">dcc</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">figure</span><span class="o">=</span><span class="n">size_scatter_fit</span><span class="p">),</span>
+                <span class="n">dcc</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">figure</span><span class="o">=</span><span class="n">filename_scatter_fig</span><span class="p">),</span>
+            <span class="p">],</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"Inspection done. Result plots are ready!"</span>
         <span class="k">return</span> <span class="s2">""</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">""</span>
 
     <span class="nd">@app</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
