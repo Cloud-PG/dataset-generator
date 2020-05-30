@@ -31,14 +31,17 @@ def _make_empty_df() -> 'pd.DataFrame':
 
 class Day(object):
 
-    def __init__(self, date: 'datetime.date'):
+    def __init__(self, date: 'datetime.date', df: 'pd.DataFrame' = None):
         """Initialize current day basic information.
 
         :param date: The current date of the Day object
         :type date: datetime.date
         """
         self._date = date
-        self._df = _make_empty_df()
+        if df is not None:
+            self._df = df
+        else:
+            self._df = _make_empty_df()
 
     def __repr__(self):
         return f"{self._date}=>{self._df.to_string()}"
@@ -433,6 +436,34 @@ class Generator(object):
             cur_date = cur_date + delta
 
         yield 100
+
+    def _open_dataset_file(self, filename: 'str') -> 'Day':
+        """Open a single dataset day.
+
+        :return: the current day data
+        :rtype: Day
+        """
+        cur_date = [
+            int(elm)
+            for elm in filename.as_posix().rsplit(
+                "_", 1)[1].split(
+                    ".", 1)[0].split(
+                        "-")
+        ]
+        cur_date = datetime.date(*cur_date)
+        df = pd.read_csv(Path(filename))
+        return Day(cur_date, df)
+
+    def open_data(self, folder: str):
+        """Open dataset from a folder.
+
+        :param folder: the dataset folder
+        :type folder: str
+        """
+        for file_ in Path(folder).resolve().glob("*.csv*"):
+            self._days.append(
+                self._open_dataset_file(file_)
+            )
 
     def save(self):
         """Exports all days' DataFrames in dest_folder."""

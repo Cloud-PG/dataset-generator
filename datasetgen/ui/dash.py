@@ -82,11 +82,21 @@ def _create_layout(app, dest_folder: 'Path', function_UIs: dict):
                 placeholder="destination folder name",
                 value=dest_folder.name,
             ), width="auto"),
-            dbc.Col(dcc.Upload(
-                dbc.Button('Select folder'),
-                id='select-folder',
-                multiple=True,
-            ), width="auto"),
+            dbc.Col(
+                dbc.Button(
+                    'Load files',
+                    id='load-files'
+                ),
+                width={'size': "auto"}
+            ),
+            dbc.Col(
+                dbc.Spinner(
+                    html.H5(
+                    id='dest-folder-load',
+                    children=""
+                )),
+                width={'size': "auto"}
+            ),
         ]),
         html.Hr(),
         html.H3(children="Generator Parameters"),
@@ -205,15 +215,14 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
     for elm in function_UIs.values():
         elm.callbacks()
 
-    @app.callback(Output('dest-folder', 'value'),
-                  [Input('select-folder', 'contents')],
-                  [State('select-folder', 'filename'),
-                   State('select-folder', 'last_modified')])
-    def select_folder(list_of_contents, list_of_names, list_of_dates):
-        print(list_of_contents, list_of_names, list_of_dates)
-        if list_of_contents is not None:
-            return dest_folder.name
-        return dest_folder.name
+    @app.callback([Output('dest-folder', 'value'),
+                   Output('dest-folder-load', 'children')],
+                  [Input('load-files', 'n_clicks')],)
+    def open_folder(n_clicks):
+        if n_clicks:
+            generator.open_data(generator.dest_folder.name)
+            return generator.dest_folder.name, "All data loaded..."
+        return generator.dest_folder.name, "No data loaded..."
 
     @app.callback(
         [Output("functions", "options"), Output("functions", "value")],
@@ -355,7 +364,7 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
                 dcc.Graph(figure=size_hist_fig),
                 dcc.Graph(figure=size_scatter_fit),
                 dcc.Graph(figure=filename_scatter_fig),
-            ], True, "Inspection donw. Result plots are ready!"
+            ], True, "Inspection done. Result plots are ready!"
         return "", False, ""
 
     @app.callback(
