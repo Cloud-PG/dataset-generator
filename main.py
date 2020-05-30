@@ -56,12 +56,12 @@ def main():
         with tqdm(desc="Prepare dataset days", total=100, ascii=True) as pbar:
             prev_perc = 0.
             for cur_perc in generator.prepare(**config['function']):
-                pbar.update(cur_perc - prev_perc)
+                pbar.update(int(cur_perc - prev_perc))
                 prev_perc = cur_perc
 
         for _ in tqdm(generator.save(),
                       desc="Save dataset",
-                      total=generator.num_days,
+                      total=int(generator.num_days),
                       ascii=True):
             pass
 

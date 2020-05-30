@@ -209,8 +209,7 @@ class RecencyFocusedDataset(GenFunction):
     """Dataset to test the recency aspect."""
 
     def __init__(self, num_files: int, min_file_size: int, max_file_size: int,
-                 perc_noise: float, perc_files_x_day: float,
-                 size_generator_function: str):
+                 perc_files_x_day: float, size_generator_function: str):
         """Initialize the recency function parameters.
 
         :param num_files: total number of files
@@ -219,7 +218,6 @@ class RecencyFocusedDataset(GenFunction):
         :type min_file_size: int
         :param max_file_size: maximum size of the files
         :type max_file_size: int
-        :type perc_noise: float
         :param perc_files_x_day: percentage of files per day (selected files)
         :type perc_files_x_day: float
         :param size_generator_function: name of the size generator function
@@ -229,7 +227,6 @@ class RecencyFocusedDataset(GenFunction):
         self._num_files: int = num_files
         self._min_file_size: int = min_file_size
         self._max_file_size: int = max_file_size
-        self._perc_noise: float = perc_noise
         self._perc_files_x_day: float = perc_files_x_day
         self._size_generator_function: str = size_generator_function
 
@@ -251,41 +248,25 @@ class RecencyFocusedDataset(GenFunction):
         """
         all_requests = []
         file_perc_x_day = self._perc_files_x_day / 100.
-        perc_noise = self._perc_noise / 100.
 
         filenames = list(self._files.keys())
         num_visible_files = int(len(self._files) * file_perc_x_day)
-        # 10% of files are noise
-        num_noise_files = int(num_visible_files * 0.1)
 
         random.shuffle(filenames)
         filenames = filenames[:num_visible_files]
-        noise_files = filenames[:num_noise_files]
-        normal_files = filenames[num_noise_files:]
 
         while len(all_requests) < max_num:
-            random.shuffle(noise_files)
-            random.shuffle(normal_files)
-            if random.random() <= perc_noise:
-                for cur_file in noise_files:
-                    if len(all_requests) == max_num:
-                        break
-                    noise_file_info = self._files[cur_file]
-                    all_requests.append({
-                        'Filename': cur_file,
-                        **noise_file_info.copy(),
-                    })
-            else:
-                for cur_file in normal_files:
-                    if len(all_requests) == max_num:
-                        break
-                    file_info = self._files[cur_file]
-                    all_requests.append({
-                        'Filename': cur_file,
-                        **file_info.copy(),
-                    })
-            if len(all_requests) == max_num:
-                break
+            for cur_file in filenames:
+                file_info = self._files[cur_file]
+                all_requests.append({
+                    'Filename': cur_file,
+                    **file_info.copy(),
+                })
+                if len(all_requests) == max_num:
+                    break
+
+            if random.random() > 0.5:
+                filenames = list(reversed(filenames))
 
         for num, elm in enumerate(all_requests):
             yield elm, float(num / len(all_requests)) * 100.

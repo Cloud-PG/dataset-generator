@@ -1,16 +1,15 @@
 {
     "seed": 42,
     "num_days": 365,
-    "num_req_x_day": 2000,
+    "num_req_x_day": 1000,
     "dest_folder": "RecencyFocusedDataset",
     "function": {
         "function_name": "RecencyFocusedDataset",
         "kwargs": {
-            "num_files": 10000,
-            "min_file_size": 100,
-            "max_file_size": 24000,
-            "perc_noise": 25.0,
-            "perc_files_x_day": 1.0,
+            "num_files": 100,
+            "min_file_size": 499,
+            "max_file_size": 500,
+            "perc_files_x_day": 10.0,
             "size_generator_function": "gen_random_sizes"
         }
     }
