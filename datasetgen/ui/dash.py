@@ -92,9 +92,9 @@ def _create_layout(app, dest_folder: 'Path', function_UIs: dict):
             dbc.Col(
                 dbc.Spinner(
                     html.H5(
-                    id='dest-folder-load',
-                    children=""
-                )),
+                        id='dest-folder-load',
+                        children=""
+                    )),
                 width={'size': "auto"}
             ),
         ]),
