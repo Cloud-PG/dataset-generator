@@ -11,7 +11,7 @@
             "max_file_size": 4000,
             "lambda_less_req_files": 1.0,
             "lambda_more_req_files": 10.0,
-            "perc_more_req_files": 30.0,
+            "perc_more_req_files": 25.0,
             "perc_files_x_day": 1.0,
             "size_generator_function": "gen_random_sizes"
         }
