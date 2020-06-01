@@ -461,6 +461,8 @@ class Generator(object):
         :param folder: the dataset folder
         :type folder: str
         """
+        del self._days[:]
+        self._days = []
         for file_ in Path(folder).resolve().glob("*.csv*"):
             self._days.append(
                 self._open_dataset_file(file_)
