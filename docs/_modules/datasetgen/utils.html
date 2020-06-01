@@ -234,6 +234,7 @@
 
 <div class="viewcode-block" id="_FILE_SIZE_STEP"><a class="viewcode-back" href="../../autoapi/datasetgen/utils/index.html#datasetgen.utils._FILE_SIZE_STEP">[docs]</a><span class="n">_FILE_SIZE_STEP</span> <span class="o">=</span> <span class="mi">100</span></div>
 
+<span class="c1"># Use case file size distribution (bins)</span>
 <div class="viewcode-block" id="_SIZE_PROB_DISTRIBUTION"><a class="viewcode-back" href="../../autoapi/datasetgen/utils/index.html#datasetgen.utils._SIZE_PROB_DISTRIBUTION">[docs]</a><span class="n">_SIZE_PROB_DISTRIBUTION</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
     <span class="mf">2.32126756e-05</span><span class="p">,</span> <span class="mf">2.81787018e-05</span><span class="p">,</span> <span class="mf">5.16012095e-05</span><span class="p">,</span> <span class="mf">3.83730445e-05</span><span class="p">,</span>
     <span class="mf">2.51317649e-05</span><span class="p">,</span> <span class="mf">2.68803657e-05</span><span class="p">,</span> <span class="mf">2.55383146e-05</span><span class="p">,</span> <span class="mf">3.09471740e-04</span><span class="p">,</span>
@@ -263,7 +264,15 @@
 <span class="p">])</span>
 
 
-<div class="viewcode-block" id="str2bool"><a class="viewcode-back" href="../../autoapi/datasetgen/utils/index.html#datasetgen.utils.str2bool">[docs]</a><span class="k">def</span> <span class="nf">str2bool</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+<div class="viewcode-block" id="str2bool"><a class="viewcode-back" href="../../autoapi/datasetgen/utils/index.html#datasetgen.utils.str2bool">[docs]</a><span class="k">def</span> <span class="nf">str2bool</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sd">"""Function to convert a string to bool and check if it is true.</span>
+
+<span class="sd">    :param v: input string</span>
+<span class="sd">    :type v: str</span>
+<span class="sd">    :raises ArgumentTypeError: if the string is not a boolean value</span>
+<span class="sd">    :return: the string boolean value</span>
+<span class="sd">    :rtype: bool</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">v</span>
     <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'yes'</span><span class="p">,</span> <span class="s1">'true'</span><span class="p">,</span> <span class="s1">'t'</span><span class="p">,</span> <span class="s1">'y'</span><span class="p">,</span> <span class="s1">'1'</span><span class="p">):</span>
@@ -274,8 +283,19 @@
         <span class="k">raise</span> <span class="n">ArgumentTypeError</span><span class="p">(</span><span class="s1">'Boolean value expected.'</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="gen_random_sizes"><a class="viewcode-back" href="../../autoapi/datasetgen/utils/index.html#datasetgen.utils.gen_random_sizes">[docs]</a><span class="k">def</span> <span class="nf">gen_random_sizes</span><span class="p">(</span><span class="n">num_files</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                     <span class="n">min_file_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_file_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<div class="viewcode-block" id="gen_random_sizes"><a class="viewcode-back" href="../../autoapi/datasetgen/utils/index.html#datasetgen.utils.gen_random_sizes">[docs]</a><span class="k">def</span> <span class="nf">gen_random_sizes</span><span class="p">(</span><span class="n">num_files</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">min_file_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                     <span class="n">max_file_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="sd">"""Generates a list of sizes for each files using a random distribution.</span>
+
+<span class="sd">    :param num_files: total number of files</span>
+<span class="sd">    :type num_files: int</span>
+<span class="sd">    :param min_file_size: minimum file size</span>
+<span class="sd">    :type min_file_size: int</span>
+<span class="sd">    :param max_file_size: maximum file size</span>
+<span class="sd">    :type max_file_size: int</span>
+<span class="sd">    :return: list of file sizes</span>
+<span class="sd">    :rtype: list</span>
+<span class="sd">    """</span>
     <span class="n">file_sizes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">min_file_size</span><span class="p">,</span> <span class="n">max_file_size</span><span class="p">,</span> <span class="n">_FILE_SIZE_STEP</span><span class="p">))</span>
     <span class="n">file_size_prob</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">file_sizes</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">size</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">file_sizes</span><span class="p">):</span>
@@ -294,8 +314,19 @@
     <span class="k">return</span> <span class="n">sizes</span></div>
 
 
-<div class="viewcode-block" id="gen_in_range_random_sizes"><a class="viewcode-back" href="../../autoapi/datasetgen/utils/index.html#datasetgen.utils.gen_in_range_random_sizes">[docs]</a><span class="k">def</span> <span class="nf">gen_in_range_random_sizes</span><span class="p">(</span><span class="n">num_files</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                              <span class="n">min_file_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_file_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<div class="viewcode-block" id="gen_in_range_random_sizes"><a class="viewcode-back" href="../../autoapi/datasetgen/utils/index.html#datasetgen.utils.gen_in_range_random_sizes">[docs]</a><span class="k">def</span> <span class="nf">gen_in_range_random_sizes</span><span class="p">(</span><span class="n">num_files</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">min_file_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                              <span class="n">max_file_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="sd">"""Generates a list of sizes that follows the use case distribution.</span>
+
+<span class="sd">    :param num_files: total number of files</span>
+<span class="sd">    :type num_files: int</span>
+<span class="sd">    :param min_file_size: minimum file size</span>
+<span class="sd">    :type min_file_size: int</span>
+<span class="sd">    :param max_file_size: masimum file size</span>
+<span class="sd">    :type max_file_size: int</span>
+<span class="sd">    :return: list of file sizes</span>
+<span class="sd">    :rtype: list</span>
+<span class="sd">    """</span>
     <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
         <span class="n">min_file_size</span><span class="p">,</span> <span class="n">max_file_size</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">_SIZE_PROB_DISTRIBUTION</span><span class="p">)</span>
     <span class="p">)</span>
@@ -304,12 +335,25 @@
     <span class="k">return</span> <span class="n">sizes</span></div>
 
 
-<div class="viewcode-block" id="gen_random_files"><a class="viewcode-back" href="../../autoapi/datasetgen/utils/index.html#datasetgen.utils.gen_random_files">[docs]</a><span class="k">def</span> <span class="nf">gen_random_files</span><span class="p">(</span><span class="n">num_files</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                     <span class="n">min_file_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_file_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<div class="viewcode-block" id="gen_random_files"><a class="viewcode-back" href="../../autoapi/datasetgen/utils/index.html#datasetgen.utils.gen_random_files">[docs]</a><span class="k">def</span> <span class="nf">gen_random_files</span><span class="p">(</span><span class="n">num_files</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">min_file_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_file_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                      <span class="n">size_generator_function</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'gen_in_range_random_sizes'</span><span class="p">,</span>
-                     <span class="n">start_from</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-                     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="sd">"""Generates a dict with random files with a random size."""</span>
+                     <span class="n">start_from</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">"""Generates a dict with random files with a random size.</span>
+
+<span class="sd">    :param num_files: total number of files</span>
+<span class="sd">    :type num_files: int</span>
+<span class="sd">    :param min_file_size: minimum file size</span>
+<span class="sd">    :type min_file_size: int</span>
+<span class="sd">    :param max_file_size: maximum file size</span>
+<span class="sd">    :type max_file_size: int</span>
+<span class="sd">    :param size_generator_function: function to use to generate file sizes, defaults to 'gen_in_range_random_sizes'</span>
+<span class="sd">    :type size_generator_function: str, optional</span>
+<span class="sd">    :param start_from: filename reference index, defaults to 0</span>
+<span class="sd">    :type start_from: int, optional</span>
+<span class="sd">    :raises Exception: size generator function not exists</span>
+<span class="sd">    :return: dictionary with filenames and their sizes</span>
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">size_generator_function</span> <span class="o">==</span> <span class="s1">'gen_in_range_random_sizes'</span><span class="p">:</span>
         <span class="n">sizes</span> <span class="o">=</span> <span class="n">gen_in_range_random_sizes</span><span class="p">(</span>
             <span class="n">num_files</span><span class="p">,</span> <span class="n">min_file_size</span><span class="p">,</span> <span class="n">max_file_size</span>
@@ -329,7 +373,14 @@
     <span class="p">}</span>
 
 
-<div class="viewcode-block" id="gen_fake_cpu_work"><a class="viewcode-back" href="../../autoapi/datasetgen/utils/index.html#datasetgen.utils.gen_fake_cpu_work">[docs]</a><span class="k">def</span> <span class="nf">gen_fake_cpu_work</span><span class="p">(</span><span class="n">num_cpus</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="gen_fake_cpu_work"><a class="viewcode-back" href="../../autoapi/datasetgen/utils/index.html#datasetgen.utils.gen_fake_cpu_work">[docs]</a><span class="k">def</span> <span class="nf">gen_fake_cpu_work</span><span class="p">(</span><span class="n">num_cpus</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+    <span class="sd">"""Generates a fake CPU times.</span>
+
+<span class="sd">    :param num_cpus: number of CPU to simulate, defaults to 1</span>
+<span class="sd">    :type num_cpus: int, optional</span>
+<span class="sd">    :return: work statistics -&gt; number of CPUs, wall time, CPU time, single CPU time and io time</span>
+<span class="sd">    :rtype: tuple</span>
+<span class="sd">    """</span>
     <span class="n">wall_time</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">600</span><span class="p">))</span>
     <span class="n">single_cpu_time</span> <span class="o">=</span> <span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="n">wall_time</span><span class="p">)</span>
     <span class="n">cpu_time</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">single_cpu_time</span> <span class="o">*</span> <span class="n">num_cpus</span><span class="p">)</span>
@@ -337,6 +388,7 @@
     <span class="k">return</span> <span class="n">num_cpus</span><span class="p">,</span> <span class="n">wall_time</span><span class="p">,</span> <span class="n">cpu_time</span><span class="p">,</span> <span class="n">single_cpu_time</span><span class="p">,</span> <span class="n">io_time</span></div>
 
 
+<span class="c1"># Dataset columns with types</span>
 <div class="viewcode-block" id="COLUMNS"><a class="viewcode-back" href="../../autoapi/datasetgen/utils/index.html#datasetgen.utils.COLUMNS">[docs]</a><span class="n">COLUMNS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">'Filename'</span><span class="p">:</span> <span class="s2">"int64"</span><span class="p">,</span>
     <span class="s1">'SiteName'</span><span class="p">:</span> <span class="s2">"int64"</span><span class="p">,</span>

@@ -251,25 +251,104 @@
 <dd></dd></dl>
 <dl class="py function">
 <dt id="datasetgen.utils.str2bool">
-<code class="sig-prename descclassname">datasetgen.utils.</code><code class="sig-name descname">str2bool</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">v</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/utils.html#str2bool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.utils.str2bool" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-prename descclassname">datasetgen.utils.</code><code class="sig-name descname">str2bool</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">v</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> → bool<a class="reference internal" href="../../../_modules/datasetgen/utils.html#str2bool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.utils.str2bool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to convert a string to bool and check if it is true.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>v</strong> (<em>str</em>) – input string</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ArgumentTypeError</strong> – if the string is not a boolean value</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the string boolean value</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 <dl class="py function">
 <dt id="datasetgen.utils.gen_random_sizes">
 <code class="sig-prename descclassname">datasetgen.utils.</code><code class="sig-name descname">gen_random_sizes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_files</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">min_file_size</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">max_file_size</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> → list<a class="reference internal" href="../../../_modules/datasetgen/utils.html#gen_random_sizes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.utils.gen_random_sizes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Generates a list of sizes for each files using a random distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_files</strong> (<em>int</em>) – total number of files</p></li>
+<li><p><strong>min_file_size</strong> (<em>int</em>) – minimum file size</p></li>
+<li><p><strong>max_file_size</strong> (<em>int</em>) – maximum file size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of file sizes</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
 <dl class="py function">
 <dt id="datasetgen.utils.gen_in_range_random_sizes">
 <code class="sig-prename descclassname">datasetgen.utils.</code><code class="sig-name descname">gen_in_range_random_sizes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_files</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">min_file_size</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">max_file_size</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> → list<a class="reference internal" href="../../../_modules/datasetgen/utils.html#gen_in_range_random_sizes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.utils.gen_in_range_random_sizes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Generates a list of sizes that follows the use case distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_files</strong> (<em>int</em>) – total number of files</p></li>
+<li><p><strong>min_file_size</strong> (<em>int</em>) – minimum file size</p></li>
+<li><p><strong>max_file_size</strong> (<em>int</em>) – masimum file size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of file sizes</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
 <dl class="py function">
 <dt id="datasetgen.utils.gen_random_files">
 <code class="sig-prename descclassname">datasetgen.utils.</code><code class="sig-name descname">gen_random_files</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_files</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">min_file_size</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">max_file_size</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">size_generator_function</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'gen_in_range_random_sizes'</span></em>, <em class="sig-param"><span class="n">start_from</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">0</span></em><span class="sig-paren">)</span> → dict<a class="reference internal" href="../../../_modules/datasetgen/utils.html#gen_random_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.utils.gen_random_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates a dict with random files with a random size.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_files</strong> (<em>int</em>) – total number of files</p></li>
+<li><p><strong>min_file_size</strong> (<em>int</em>) – minimum file size</p></li>
+<li><p><strong>max_file_size</strong> (<em>int</em>) – maximum file size</p></li>
+<li><p><strong>size_generator_function</strong> (<em>str</em><em>, </em><em>optional</em>) – function to use to generate file sizes, defaults to ‘gen_in_range_random_sizes’</p></li>
+<li><p><strong>start_from</strong> (<em>int</em><em>, </em><em>optional</em>) – filename reference index, defaults to 0</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>Exception</strong> – size generator function not exists</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>dictionary with filenames and their sizes</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py function">
 <dt id="datasetgen.utils.gen_fake_cpu_work">
-<code class="sig-prename descclassname">datasetgen.utils.</code><code class="sig-name descname">gen_fake_cpu_work</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_cpus</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/datasetgen/utils.html#gen_fake_cpu_work"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.utils.gen_fake_cpu_work" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-prename descclassname">datasetgen.utils.</code><code class="sig-name descname">gen_fake_cpu_work</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_cpus</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em><span class="sig-paren">)</span> → tuple<a class="reference internal" href="../../../_modules/datasetgen/utils.html#gen_fake_cpu_work"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.utils.gen_fake_cpu_work" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a fake CPU times.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>num_cpus</strong> (<em>int</em><em>, </em><em>optional</em>) – number of CPU to simulate, defaults to 1</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>work statistics -&gt; number of CPUs, wall time, CPU time, single CPU time and io time</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
 <dl class="py data">
 <dt id="datasetgen.utils.COLUMNS">
 <code class="sig-prename descclassname">datasetgen.utils.</code><code class="sig-name descname">COLUMNS</code><a class="reference internal" href="../../../_modules/datasetgen/utils.html#COLUMNS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#datasetgen.utils.COLUMNS" title="Permalink to this definition">¶</a></dt>

@@ -18,21 +18,72 @@ Module Contents
 
    
 
-.. function:: str2bool(v)
+.. function:: str2bool(v: str) -> bool
+
+   Function to convert a string to bool and check if it is true.
+
+   :param v: input string
+   :type v: str
+   :raises ArgumentTypeError: if the string is not a boolean value
+   :return: the string boolean value
+   :rtype: bool
 
 
 .. function:: gen_random_sizes(num_files: int, min_file_size: int, max_file_size: int) -> list
 
+   Generates a list of sizes for each files using a random distribution.
+
+   :param num_files: total number of files
+   :type num_files: int
+   :param min_file_size: minimum file size
+   :type min_file_size: int
+   :param max_file_size: maximum file size
+   :type max_file_size: int
+   :return: list of file sizes
+   :rtype: list
+
 
 .. function:: gen_in_range_random_sizes(num_files: int, min_file_size: int, max_file_size: int) -> list
+
+   Generates a list of sizes that follows the use case distribution.
+
+   :param num_files: total number of files
+   :type num_files: int
+   :param min_file_size: minimum file size
+   :type min_file_size: int
+   :param max_file_size: masimum file size
+   :type max_file_size: int
+   :return: list of file sizes
+   :rtype: list
 
 
 .. function:: gen_random_files(num_files: int, min_file_size: int, max_file_size: int, size_generator_function: str = 'gen_in_range_random_sizes', start_from: int = 0) -> dict
 
    Generates a dict with random files with a random size.
 
+   :param num_files: total number of files
+   :type num_files: int
+   :param min_file_size: minimum file size
+   :type min_file_size: int
+   :param max_file_size: maximum file size
+   :type max_file_size: int
+   :param size_generator_function: function to use to generate file sizes, defaults to 'gen_in_range_random_sizes'
+   :type size_generator_function: str, optional
+   :param start_from: filename reference index, defaults to 0
+   :type start_from: int, optional
+   :raises Exception: size generator function not exists
+   :return: dictionary with filenames and their sizes
+   :rtype: dict
 
-.. function:: gen_fake_cpu_work(num_cpus: int = 1)
+
+.. function:: gen_fake_cpu_work(num_cpus: int = 1) -> tuple
+
+   Generates a fake CPU times.
+
+   :param num_cpus: number of CPU to simulate, defaults to 1
+   :type num_cpus: int, optional
+   :return: work statistics -> number of CPUs, wall time, CPU time, single CPU time and io time
+   :rtype: tuple
 
 
 .. data:: COLUMNS
