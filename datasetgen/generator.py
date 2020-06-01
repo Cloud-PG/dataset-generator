@@ -274,12 +274,13 @@ class Generator(object):
             inplace=True
         )
 
-        all_day_file_size = df.drop_duplicates(
-            'Filename').groupby('reqDay').Size.sum()
-        all_day_file_size = all_day_file_size.reset_index()
-        all_day_file_size['day'] = pd.to_datetime(
-            all_day_file_size.reqDay, unit="s")
-        all_day_file_size.Size /= 1024**2
+        all_day_file_size = {'day': [], 'Size': []}
+        for idx, group in df.groupby('reqDay')[['Filename', 'Size']]:
+            all_day_file_size['day'].append(pd.to_datetime(idx, unit="s"))
+            all_day_file_size['Size'].append(
+                group.drop_duplicates('Filename').Size.sum() / 1024**2
+            )
+        all_day_file_size = pd.DataFrame(data=all_day_file_size)
 
         num_files = df.groupby('reqDay').Filename.nunique()
         num_files = num_files.reset_index()
