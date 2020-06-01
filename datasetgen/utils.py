@@ -5,6 +5,7 @@ import numpy as np
 
 _FILE_SIZE_STEP = 100
 
+# Use case file size distribution (bins)
 _SIZE_PROB_DISTRIBUTION = np.array([
     2.32126756e-05, 2.81787018e-05, 5.16012095e-05, 3.83730445e-05,
     2.51317649e-05, 2.68803657e-05, 2.55383146e-05, 3.09471740e-04,
@@ -34,7 +35,15 @@ _SIZE_PROB_DISTRIBUTION = np.array([
 ])
 
 
-def str2bool(v):
+def str2bool(v: str) -> bool:
+    """Function to convert a string to bool and check if it is true.
+
+    :param v: input string
+    :type v: str
+    :raises ArgumentTypeError: if the string is not a boolean value
+    :return: the string boolean value
+    :rtype: bool
+    """
     if isinstance(v, bool):
         return v
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
@@ -45,8 +54,19 @@ def str2bool(v):
         raise ArgumentTypeError('Boolean value expected.')
 
 
-def gen_random_sizes(num_files: int,
-                     min_file_size: int, max_file_size: int) -> list:
+def gen_random_sizes(num_files: int, min_file_size: int,
+                     max_file_size: int) -> list:
+    """Generates a list of sizes for each files using a random distribution.
+
+    :param num_files: total number of files
+    :type num_files: int
+    :param min_file_size: minimum file size
+    :type min_file_size: int
+    :param max_file_size: maximum file size
+    :type max_file_size: int
+    :return: list of file sizes
+    :rtype: list
+    """
     file_sizes = list(range(min_file_size, max_file_size, _FILE_SIZE_STEP))
     file_size_prob = np.random.randint(2, size=len(file_sizes))
     for idx, size in enumerate(file_sizes):
@@ -65,8 +85,19 @@ def gen_random_sizes(num_files: int,
     return sizes
 
 
-def gen_in_range_random_sizes(num_files: int,
-                              min_file_size: int, max_file_size: int) -> list:
+def gen_in_range_random_sizes(num_files: int, min_file_size: int,
+                              max_file_size: int) -> list:
+    """Generates a list of sizes that follows the use case distribution.
+
+    :param num_files: total number of files
+    :type num_files: int
+    :param min_file_size: minimum file size
+    :type min_file_size: int
+    :param max_file_size: masimum file size
+    :type max_file_size: int
+    :return: list of file sizes
+    :rtype: list
+    """
     bins = np.linspace(
         min_file_size, max_file_size, len(_SIZE_PROB_DISTRIBUTION)
     )
@@ -75,12 +106,25 @@ def gen_in_range_random_sizes(num_files: int,
     return sizes
 
 
-def gen_random_files(num_files: int,
-                     min_file_size: int, max_file_size: int,
+def gen_random_files(num_files: int, min_file_size: int, max_file_size: int,
                      size_generator_function: str = 'gen_in_range_random_sizes',
-                     start_from: int = 0,
-                     ) -> dict:
-    """Generates a dict with random files with a random size."""
+                     start_from: int = 0,) -> dict:
+    """Generates a dict with random files with a random size.
+
+    :param num_files: total number of files
+    :type num_files: int
+    :param min_file_size: minimum file size
+    :type min_file_size: int
+    :param max_file_size: maximum file size
+    :type max_file_size: int
+    :param size_generator_function: function to use to generate file sizes, defaults to 'gen_in_range_random_sizes'
+    :type size_generator_function: str, optional
+    :param start_from: filename reference index, defaults to 0
+    :type start_from: int, optional
+    :raises Exception: size generator function not exists
+    :return: dictionary with filenames and their sizes
+    :rtype: dict
+    """
     if size_generator_function == 'gen_in_range_random_sizes':
         sizes = gen_in_range_random_sizes(
             num_files, min_file_size, max_file_size
@@ -100,7 +144,14 @@ def gen_random_files(num_files: int,
     }
 
 
-def gen_fake_cpu_work(num_cpus: int = 1):
+def gen_fake_cpu_work(num_cpus: int = 1) -> tuple:
+    """Generates a fake CPU times.
+
+    :param num_cpus: number of CPU to simulate, defaults to 1
+    :type num_cpus: int, optional
+    :return: work statistics -> number of CPUs, wall time, CPU time, single CPU time and io time
+    :rtype: tuple
+    """
     wall_time = float(random.randint(60, 600))
     single_cpu_time = (random.random() * wall_time)
     cpu_time = float(single_cpu_time * num_cpus)
@@ -108,6 +159,7 @@ def gen_fake_cpu_work(num_cpus: int = 1):
     return num_cpus, wall_time, cpu_time, single_cpu_time, io_time
 
 
+# Dataset columns with types
 COLUMNS = {
     'Filename': "int64",
     'SiteName': "int64",

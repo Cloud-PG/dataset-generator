@@ -162,6 +162,27 @@ class HighFrequencyDataset(GenFunction):
         assert len(set(self._more_req_files.keys()) &
                    set(self._less_req_files.keys())) == 0
 
+        self._more_req_files_freq = {
+            filename: freq
+            for filename, freq in enumerate(
+                np_random.poisson(
+                    lam=self._lambda_more_req_files,
+                    size=self._num_more_req_files,
+                )
+            )
+        }
+
+        self._less_req_files_freq = {
+            filename: freq
+            for filename, freq in enumerate(
+                np_random.poisson(
+                    lam=self._lambda_less_req_files,
+                    size=self._num_less_req_files,
+                ),
+                self._num_more_req_files
+            )
+        }
+
     def __repr__(self):
         return "High Frequency Dataset"
 
@@ -173,32 +194,33 @@ class HighFrequencyDataset(GenFunction):
         :yield: the percentage of work done
         :rtype: Generator[int, None, None]
         """
-        more_req_files_freq = np_random.poisson(
-            lam=self._lambda_more_req_files, size=self._num_more_req_files
-        )
-        less_req_files_freq = np_random.poisson(
-            lam=self._lambda_less_req_files, size=self._num_less_req_files
-        )
+
+        file_perc_x_day = self._perc_files_x_day / 100.
+        filenames = list(self._more_req_files.keys()) + \
+            list(self._less_req_files.keys())
+        num_visible_files = int(len(filenames) * file_perc_x_day)
+
+        random.shuffle(filenames)
+        filenames = filenames[:num_visible_files]
 
         all_requests = []
 
-        for idx, (cur_file, file_info) in enumerate(self._more_req_files.items()):
-            if random.random() * 100. <= self._perc_files_x_day:
-                for _ in range(more_req_files_freq[idx]):
-                    all_requests.append({
-                        'Filename': cur_file,
-                        **file_info.copy(),
-                    })
-
-        for idx, (cur_file, file_info) in enumerate(self._less_req_files.items()):
-            if random.random() * 100. <= self._perc_files_x_day:
-                for _ in range(less_req_files_freq[idx]):
-                    all_requests.append({
-                        'Filename': cur_file,
-                        **file_info.copy(),
-                    })
+        for cur_file in filenames:
+            if cur_file in self._more_req_files_freq:
+                max_num_req = self._more_req_files_freq[cur_file]
+                file_info = self._more_req_files[cur_file]
+            elif cur_file in self._less_req_files_freq:
+                max_num_req = self._less_req_files_freq[cur_file]
+                file_info = self._less_req_files[cur_file]
+            for _ in range(random.randint(0, max_num_req)):
+                all_requests.append({
+                    'Filename': cur_file,
+                    **file_info.copy(),
+                })
 
         random.shuffle(all_requests)
+        
+        print(sum([elm['Size'] for elm in all_requests]))
 
         for num, elm in enumerate(all_requests):
             yield elm, float(num / len(all_requests)) * 100.
