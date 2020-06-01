@@ -311,7 +311,7 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
             (df, file_frequencies, all_day_file_size, file_sizes,
              num_files, num_req) = generator.df_stats
 
-            if not df:
+            if df is None:
                 return "", True, "No data in dataset..."
 
             layout = Layout(
