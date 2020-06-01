@@ -255,6 +255,9 @@ class Generator(object):
         :return: the concatenated dataframe
         :rtype: pd.DataFrame
         """
+        if not self._days:
+            return None
+
         all_df = pd.concat([day.df for day in self._days])
         all_df['Date'] = pd.to_datetime(all_df.reqDay, unit='s')
         return all_df
@@ -266,6 +269,9 @@ class Generator(object):
         :return: a tuple with several DataFrames
         :rtype: Tuple[pd.DataFrame]
         """
+        if not self._days:
+            return (None, None, None, None, None, None)
+
         df = self.df
 
         file_frequencies = df.Filename.value_counts().reset_index()

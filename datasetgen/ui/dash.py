@@ -311,6 +311,9 @@ def _prepare_callbacks(app, generator, dest_folder, function_UIs: dict):
             (df, file_frequencies, all_day_file_size, file_sizes,
              num_files, num_req) = generator.df_stats
 
+            if not df:
+                return "", True, "No data in dataset..."
+
             layout = Layout(
                 paper_bgcolor='rgb(255,255,255)',
                 plot_bgcolor='rgb(255,255,255)',
