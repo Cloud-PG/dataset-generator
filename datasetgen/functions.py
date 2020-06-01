@@ -219,8 +219,6 @@ class HighFrequencyDataset(GenFunction):
                 })
 
         random.shuffle(all_requests)
-        
-        print(sum([elm['Size'] for elm in all_requests]))
 
         for num, elm in enumerate(all_requests):
             yield elm, float(num / len(all_requests)) * 100.
