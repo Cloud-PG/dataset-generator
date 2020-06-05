@@ -15,7 +15,7 @@ Start the UI and open [localhost](http://127.0.0.1:8050/):
 python main.py --ui
 ```
 
-> **NOTE 0**: the UI starts in debug mode as default
+> **NOTE 0**: the UI starts in debug mode as default  
 > **NOTE 1**: it is possible to open the dataset already created to inspect them
 > just using the load button with the same folder name of the generated dataset
 
