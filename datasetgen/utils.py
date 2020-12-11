@@ -35,25 +35,6 @@ _SIZE_PROB_DISTRIBUTION = np.array([
 ])
 
 
-def str2bool(v: str) -> bool:
-    """Function to convert a string to bool and check if it is true.
-
-    :param v: input string
-    :type v: str
-    :raises ArgumentTypeError: if the string is not a boolean value
-    :return: the string boolean value
-    :rtype: bool
-    """
-    if isinstance(v, bool):
-        return v
-    if v.lower() in ('yes', 'true', 't', 'y', '1'):
-        return True
-    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
-        return False
-    else:
-        raise ArgumentTypeError('Boolean value expected.')
-
-
 def gen_random_sizes(num_files: int, min_file_size: int,
                      max_file_size: int) -> list:
     """Generates a list of sizes for each files using a random distribution.

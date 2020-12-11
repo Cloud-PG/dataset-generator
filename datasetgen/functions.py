@@ -186,7 +186,7 @@ class HighFrequencyDataset(GenFunction):
     def __repr__(self):
         return "High Frequency Dataset"
 
-    def gen_day_elements(self, max_num: int = -1) -> Generator[int, None, None]:
+    def gen_day_elements(self, max_num: int = -1) -> Generator:
         """Generates all the day's entries.
 
         :param max_num: maximum number of requests, defaults to -1
@@ -258,7 +258,7 @@ class RecencyFocusedDataset(GenFunction):
     def __repr__(self):
         return "Recency Focused Dataset"
 
-    def gen_day_elements(self, max_num: int = -1) -> Generator[int, None, None]:
+    def gen_day_elements(self, max_num: int = -1) -> Generator:
         """Generates all the day's entries.
 
         :param max_num: maximum number of requests, defaults to -1
@@ -347,7 +347,7 @@ class SizeFocusedDataset(GenFunction):
     def __repr__(self):
         return "Size Focused Dataset"
 
-    def gen_day_elements(self, max_num: int = -1) -> Generator[int, None, None]:
+    def gen_day_elements(self, max_num: int = -1) -> Generator:
         """Generates all the day's entries.
 
         :param max_num: maximum number of requests, defaults to -1
