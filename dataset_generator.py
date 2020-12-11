@@ -22,18 +22,13 @@ def ui(dest_folder: str = "dataset", debug: bool = typer.Option(False, "--debug"
 
 @app.command()
 def gen(config: str, dest_folder: str = "dataset", num_days: int = -1):
-    cur_dest_folder = Path(".").parent.resolve().joinpath(dest_folder)
     with open(Path(config)) as config_file:
         sim_config = json.load(config_file)
-    if dest_folder != "":
-        cur_dest_folder = Path(
-            ".").parent.resolve().joinpath(dest_folder)
-    elif 'dest_folder' in config:
+    if dest_folder != "dataset":
+        cur_dest_folder = Path(".").parent.resolve().joinpath(dest_folder)
+    elif 'dest_folder' in sim_config:
         cur_dest_folder = Path(".").parent.resolve().joinpath(
             sim_config['dest_folder'])
-    else:
-        cur_dest_folder = Path(
-            ".").parent.resolve().joinpath("dataset")
     generator = Generator(
         config=sim_config,
         num_days=num_days,
