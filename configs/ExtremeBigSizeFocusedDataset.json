@@ -1,0 +1,19 @@
+{
+    "seed": 42,
+    "num_days": 365,
+    "num_req_x_day": 1000,
+    "dest_folder": "ExtremeBigSizeFocusedDataset",
+    "function": {
+        "function_name": "SizeFocusedDataset",
+        "kwargs": {
+            "num_files": 100000,
+            "min_file_size": 1024,
+            "max_file_size": 4196,
+            "noise_min_file_size": 8,
+            "noise_max_file_size": 64,
+            "perc_noise": 10.0,
+            "perc_files_x_day": 0.05,
+            "size_generator_function": "gen_random_sizes"
+        }
+    }
+}
