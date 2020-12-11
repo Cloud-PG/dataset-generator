@@ -165,6 +165,6 @@ COLUMNS = {
     'IOTime': "float64",
     'reqDay': "int64",
     'Region': "int64",
-    'Campain': "int64",
+    'Campaign': "int64",
     'Process': "int64",
 }
