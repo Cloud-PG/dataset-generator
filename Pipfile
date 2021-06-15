@@ -9,6 +9,7 @@ black = "*"
 sphinx = "*"
 sphinx-autoapi = "*"
 sphinx-material = "*"
+ipython = "*"
 
 [requires]
 python_version = "3.9"
