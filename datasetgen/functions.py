@@ -367,12 +367,12 @@ class SizeFocusedDataset(GenFunction):
         while len(all_requests) < max_num:
             random.shuffle(filenames)
             for cur_file in filenames:
-                if len(all_requests) == max_num:
-                    break
                 all_requests.append({
                     'Filename': cur_file,
                     **self._files[cur_file].copy(),
                 })
+                if len(all_requests) == max_num:
+                    break
 
         for num, elm in enumerate(all_requests):
             yield elm, float(num / len(all_requests)) * 100.
