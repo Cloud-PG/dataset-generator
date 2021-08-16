@@ -23,7 +23,7 @@ You can use also the script mode passing a valid configuration as in the followi
 example:
 
 ```bash
-python main.py --config configs/HighFreqDataset.json
+python dataset_generator.py --config configs/HighFreqDataset.json
 ```
 
 ### Configuration example
